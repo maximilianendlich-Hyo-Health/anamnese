@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HYO Ersttermin – Anamnese</title>
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --bg:#f6f5f2;--card:#fff;--ink:#1d2327;--muted:#5d666d;--faint:#8a9399;--line:#e2e0da;--line2:#cfccc4;
+  --acc:#0f5e63;--acc-ink:#fff;--acc-soft:#e3f0f0;--acc-line:#9cc7c8;
+  --warn:#8a5a00;--warn-soft:#fbf1dc;--err:#a3261f;--err-soft:#fbe9e7;--ok:#2d6a2f;--ok-soft:#e6f2e2;
+  --tk:#e7f1fb;--tk-ink:#1d4f7f;--r:10px;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141719;--card:#1c2124;--ink:#e8eaeb;--muted:#a9b1b6;--faint:#7d868c;--line:#2c3337;--line2:#3a4247;
+  --acc:#5fb3b6;--acc-ink:#0d1f20;--acc-soft:#183133;--acc-line:#2f5d60;
+  --warn:#e6b45c;--warn-soft:#33290f;--err:#f08a80;--err-soft:#3a1b18;--ok:#8fcf8a;--ok-soft:#1c2e1b;--tk:#16283a;--tk-ink:#9cc7f0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font)}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1180px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;align-items:center}
+.brand{font-weight:650;letter-spacing:.2px}.brand small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.dg{grid-column:1/-1;grid-row:2;display:flex;align-items:center;gap:10px;padding-top:2px}
+.dg label{font-size:13px;color:var(--muted)}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:8px;padding:7px 10px;min-height:38px}
+select:focus,input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+#dgSelect{width:min(520px,100%);font-weight:550;border-color:var(--acc-line)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+button{font:inherit;font-size:14px;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;min-height:38px}
+button:hover{background:var(--bg)}button.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}button.primary:hover{filter:brightness(1.07)}
+.layout{max-width:1180px;margin:0 auto;padding:20px 16px 80px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}
+.layout>*{min-width:0}
+nav{position:sticky;top:120px;align-self:start}
+nav a{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px}
+nav a:hover{background:var(--card)}nav a.hidden{display:none}
+.cnt{font-size:12px;color:var(--faint);white-space:nowrap}.cnt.open{color:var(--warn)}.cnt.done{color:var(--ok)}
+.navnote{margin-top:14px;font-size:12px;color:var(--muted);padding:0 10px}
+.banner{background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:14px}
+.banner.neutral{background:var(--card);border-color:var(--line)}
+section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;scroll-margin-top:130px}
+section[hidden]{display:none}
+section>h2{margin:0;padding:14px 18px;font-size:17px;font-weight:620;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.tag{font-size:11px;font-weight:600;letter-spacing:.3px;padding:2px 7px;border-radius:5px;background:var(--acc-soft);color:var(--acc)}
+.grp{padding:4px 18px 10px}.grp[hidden]{display:none}
+.grp h3{font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 4px}
+.row{display:grid;grid-template-columns:minmax(0,34%) minmax(0,1fr);gap:6px 18px;padding:10px 0;border-top:1px solid var(--line)}
+.grp h3+.row{border-top:0}
+.row[hidden]{display:none}
+.row.tk{background:linear-gradient(90deg,var(--tk) 0,var(--tk) 4px,transparent 4px);padding-left:12px}
+.lbl{font-size:14px}.lbl .req{color:var(--err);margin-left:2px}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.id{font:11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.cond{font-size:11px;color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:0 6px}
+.tkb{font-size:11px;color:var(--tk-ink);background:var(--tk);border-radius:4px;padding:0 6px}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+.err{font-size:12px;color:var(--err);margin-top:4px}
+.row.missing .lbl{color:var(--err)}.row.missing input,.row.missing select,.row.missing textarea{border-color:var(--err)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip span{display:inline-block;padding:6px 11px;border:1px solid var(--line2);border-radius:999px;font-size:13.5px;cursor:pointer;user-select:none;background:var(--card)}
+.chip input:checked+span{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.chip input:focus-visible+span{outline:2px solid var(--acc);outline-offset:1px}
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=tel],select,textarea{width:100%;max-width:520px}
+textarea{min-height:70px;resize:vertical}
+.calc{display:inline-flex;gap:10px;align-items:baseline;padding:6px 12px;border-radius:8px;background:var(--bg);border:1px dashed var(--line2);font-weight:600;min-width:80px}
+.calc small{font-weight:400;color:var(--muted)}
+.suggest{margin-top:6px;font-size:12.5px;background:var(--acc-soft);border-radius:6px;padding:6px 9px;color:var(--ink)}
+.scr{padding:6px 18px 16px;overflow-x:auto}
+.scr table{min-width:640px}
+.scr table{width:100%;border-collapse:collapse;font-size:14px}
+.scr th{font-size:12px;text-align:left;color:var(--muted);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
+.scr td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.scr td input{max-width:120px}
+.stage{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.empty{padding:14px 18px;color:var(--muted);font-size:14px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);font-size:12px}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.hwrap{grid-template-columns:1fr}.actions{justify-content:flex-start}header{position:static}section{scroll-margin-top:10px}nav{position:static;display:flex;flex-wrap:wrap;gap:4px}nav a{background:var(--card);border:1px solid var(--line)}.navnote{display:none}.row{grid-template-columns:1fr}#dgSelect{flex:1;min-width:0}}
+@media print{header .actions,nav,.toast,footer{display:none}.layout{display:block;padding:0}section{break-inside:avoid-page;border:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand">HYO Health · Ersttermin<small id="srcNote">Anamnese &amp; spezifisches Assessment · Demo</small></div>
+    <div class="dg"><label for="dgSelect">Diagnosegruppe</label><select id="dgSelect"></select></div>
+    <div class="actions">
+      <button type="button" id="btnExample">Beispielfall SC</button>
+      <button type="button" id="btnCheck">Pflichtfelder prüfen</button>
+      <button type="button" id="btnExport" class="primary">JSON exportieren</button>
+      <button type="button" id="btnPrint">Drucken</button>
+      <button type="button" id="btnReset">Zurücksetzen</button>
+    </div>
+  </div>
+</header>
+<div class="layout">
+  <nav id="nav" aria-label="Abschnitte"></nav>
+  <main id="main">
+    <div class="banner neutral" id="dgBanner"></div>
+  </main>
+</div>
+<footer>Läuft vollständig im Browser: Eingaben werden weder gespeichert noch übertragen und sind nach dem Neuladen weg. Demo-Anwendung – keine echten Patientendaten auf öffentlich gehosteten Seiten eingeben.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const D = /*__DATA__*/null;
+const F = D.fields, L = D.lists, byId = Object.fromEntries(F.map(f => [f.id, f]));
+const SPECIFIC = {SC: ["5 ", "6 ", "7 "]};            // Diagnosegruppen mit spezifischem Assessment
+const DG_TO_VD = {SC:["DYSPH"], SCZ:["MFS"], OFZ:["MFS"], SP5:["APH"], SP6:["DYSAR"], ST1:["DYSPHON"], ST2:["DYSPHON"], ST3:["DYSPHON"], ST4:["DYSPHON"]};
+const AUTO_SCORE = {"DYSPH-S3":"GU-22", "TK-S1":"TB-03", "TK-S2":"TB-04", "TK-O1":"TB-07"};
+const GRADE_TO_KOST = {KEINE:["7","0"], LEICHT:["6","0"], MITTEL:["4","1"], SCHWER:["NPO","NPO"]};
+const GUSS_ROW = {KEINE:"20", LEICHT:"15–19", MITTEL:"10–14", SCHWER:"0–9"};
+const isScreen = f => f.sec.startsWith("4 ");
+const isMulti = f => f.type === "enum (multi)";
+const empty = v => v == null || v === "" || (Array.isArray(v) && v.length === 0);
+let state = {}, scr = {}, touched = new Set(), checked = false, cur = {vis:{}, eff:{}}, scrSig = "";
+
+const $ = (s, el=document) => el.querySelector(s);
+const h = (tag, attrs={}, ...kids) => { const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) { if (v == null || v === false) continue;
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v; else e.setAttribute(k, v === true ? "" : v); }
+  kids.flat().forEach(k => k != null && e.append(k)); return e; };
+const toast = msg => { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), 2600); };
+const slug = s => "s" + s.split(" ")[0];
+
+/* ---------- Logik ---------- */
+function activeInstruments(eff, vis) {
+  const codes = vis["MV-06"] && Array.isArray(eff["MV-06"]) ? eff["MV-06"] : [];
+  const mods = new Set(codes);
+  if (mods.has("DYSPH") && vis["DA-08"] && eff["DA-08"] === "JA") mods.add("DYSPH-TK");
+  return D.modules.filter(m => mods.has(m.mod));
+}
+function scUnion(eff, vis) {
+  const s = new Set(); activeInstruments(eff, vis).forEach(m => (scr[m.iid]?.kons || []).forEach(k => s.add(k))); return [...s];
+}
+function atom(a, eff, vis) {
+  const v = a.f === "SC-06" ? scUnion(eff, vis) : (vis[a.f] ? eff[a.f] : undefined);
+  switch (a.op) {
+    case "has": { const arr = Array.isArray(v) ? v : (empty(v) ? [] : [v]); return a.v.some(x => arr.includes(x)); }
+    case "eq": return !empty(v) && String(v).toLowerCase() === a.v.toLowerCase();
+    case "ne": return !empty(v) && String(v).toLowerCase() !== a.v.toLowerCase();
+    case "shown": return !!vis[a.f];
+    case "filled": return !empty(v);
+  }
+  return false;
+}
+const evalCond = (c, eff, vis) => !c || c.some(g => g.every(a => atom(a, eff, vis)));
+const num = v => empty(v) || isNaN(+v) ? null : +v;
+function sumOf(ids, eff, vis) { let s = 0; for (const id of ids) { if (!vis[id]) return null; const n = num(eff[id]); if (n == null) return null; s += n; } return s; }
+function calc(id, eff, vis) {
+  const range = (a, b, p="GU-") => Array.from({length:b-a+1}, (_, i) => p + String(a+i).padStart(2,"0"));
+  switch (id) {
+    case "TB-07": return sumOf(["TB-05","TB-06"], eff, vis);
+    case "GU-06": return sumOf(range(1,5), eff, vis);
+    case "GU-11": return sumOf(range(7,10), eff, vis);
+    case "GU-16": return sumOf(range(12,15), eff, vis);
+    case "GU-21": return sumOf(range(17,20), eff, vis);
+    case "GU-22": { let t = 0; for (const p of ["GU-06","GU-11","GU-16","GU-21"]) { if (!vis[p]) continue; if (eff[p] == null) return null; t += eff[p]; } return vis["GU-06"] ? t : null; }
+    case "GU-23": { const g = eff["GU-22"]; if (g == null) return null; return g === 20 ? "KEINE" : g >= 15 ? "LEICHT" : g >= 10 ? "MITTEL" : "SCHWER"; }
+  }
+  return null;
+}
+function compute() {
+  const vis = {}, eff = {};
+  for (const f of F) {
+    if (isScreen(f)) { vis[f.id] = false; continue; }
+    vis[f.id] = evalCond(f.cond, eff, vis);
+    if (f.src.startsWith("aus ")) eff[f.id] = eff[f.src.slice(4)];
+    else if (f.src === "berechnet") eff[f.id] = calc(f.id, eff, vis);
+    else {
+      if ((f.id === "BE-01" || f.id === "BE-02") && !touched.has(f.id) && eff["GU-23"]) state[f.id] = GRADE_TO_KOST[eff["GU-23"]][f.id === "BE-01" ? 0 : 1];
+      eff[f.id] = state[f.id];
+    }
+  }
+  return {vis, eff};
+}
+function fieldError(f, v) {
+  if (empty(v) || Array.isArray(v)) return "";
+  const re = /Regex (\^\S*?\$)/.exec(f.fmt);
+  if (re) { try { const rx = new RegExp(re[1]), parts = /mit ; trennen/.test(f.fmt) ? String(v).split(/\s*;\s*/) : [String(v)];
+    if (!parts.every(p => rx.test(p))) return "Format passt nicht (" + re[1] + ")"; } catch (e) {} }
+  if (f.type === "integer" && f.src !== "berechnet") {
+    if (!/^-?\d+$/.test(String(v))) return "Ganze Zahl erwartet";
+    const m = /(\d+)\s*–\s*(\d+)/.exec(f.fmt); if (m && (+v < +m[1] || +v > +m[2])) return `Erlaubt: ${m[1]}–${m[2]}`;
+  }
+  if (f.type === "string" && /E-Mail/.test(f.fmt) && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return "Keine gültige E-Mail-Adresse";
+  return "";
+}
+const needed = f => (f.req === "ja" || f.req === "bedingt") && f.src !== "berechnet" && !f.src.startsWith("aus ");
+
+/* ---------- Aufbau ---------- */
+function optionsOf(f) { if (f.list) return L[f.list]; if (f.type === "boolean") return [{c:"ja",l:"ja"},{c:"nein",l:"nein"}]; return null; }
+function control(f) {
+  const opts = optionsOf(f), name = "f_" + f.id;
+  if (f.src === "berechnet") return h("div", {class:"calc", "data-calc":f.id}, "–");
+  if (f.src.startsWith("aus ")) return h("div", {class:"calc", "data-calc":f.id}, "–");
+  if (opts) {
+    const short = opts.length <= 8 && opts.every(o => o.l.length <= 48);
+    if (isMulti(f) || short) {
+      const type = isMulti(f) ? "checkbox" : "radio";
+      return h("div", {class:"chips", role: type === "radio" ? "radiogroup" : "group", "aria-label": f.label},
+        opts.map(o => h("label", {class:"chip"}, h("input", {type, name, value:o.c, "data-id":f.id}), h("span", {text:o.l}))));
+    }
+    return h("select", {name, "data-id":f.id, "aria-label":f.label}, h("option", {value:"", text:"– bitte wählen –"}), opts.map(o => h("option", {value:o.c, text:`${o.l}`})));
+  }
+  if (f.type === "text") return h("textarea", {name, "data-id":f.id, "aria-label":f.label, placeholder:f.ex || null, maxlength:(/max\. (\d+)/.exec(f.fmt)||[])[1] || null});
+  const type = f.type === "date" ? "date" : f.type === "integer" ? "number" : /E-Mail/.test(f.fmt) ? "email" : /E\.164/.test(f.fmt) ? "tel" : "text";
+  return h("input", {type, name, "data-id":f.id, "aria-label":f.label, placeholder: type === "date" ? null : (f.ex || null), inputmode: type === "number" ? "numeric" : null});
+}
+function build() {
+  const main = $("#main"), nav = $("#nav");
+  const secs = [...new Set(F.map(f => f.sec))];
+  for (const sec of secs) {
+    const sid = slug(sec), list = F.filter(f => f.sec === sec);
+    const specific = Object.entries(SPECIFIC).find(([, pre]) => pre.some(p => sec.startsWith(p)));
+    const s = h("section", {id:sid, "data-sec":sec}, h("h2", {}, sec.replace(/^(\d+) /, "$1 · "), specific ? h("span", {class:"tag", text:"Assessment " + specific[0]}) : null));
+    if (isScreen(list[0])) { s.append(h("div", {class:"scr", id:"scrBox"})); }
+    else {
+      let grpEl = null, grp = null;
+      for (const f of list) {
+        if (f.grp !== grp) { grp = f.grp; grpEl = h("div", {class:"grp", "data-grp":sec + "|" + grp}, h("h3", {text:grp})); s.append(grpEl); }
+        const req = needed(f) ? h("span", {class:"req", title: f.req === "bedingt" ? "Pflicht, wenn angezeigt" : "Pflichtfeld", text:"*"}) : null;
+        const meta = h("div", {class:"meta"}, h("span", {class:"id", title:f.key, text:f.id}),
+          f.cond && f.condText ? h("span", {class:"cond", title:"Wird angezeigt, wenn: " + f.condText, text:"wenn " + f.condText}) : null,
+          f.scope === "nur TK" ? h("span", {class:"tkb", text:"nur TK"}) : null);
+        const lblId = "l_" + f.id;
+        const right = h("div", {}, control(f), f.hint ? h("div", {class:"hint", text:f.hint}) : null, h("div", {class:"err", "data-err":f.id}),
+          (f.id === "BE-01") ? h("div", {class:"suggest", id:"gussSuggest", hidden:true}) : null);
+        grpEl.append(h("div", {class:"row" + (f.scope === "nur TK" ? " tk" : ""), "data-row":f.id}, h("div", {class:"lbl", id:lblId}, f.label, req, meta), right));
+      }
+    }
+    main.append(s);
+    nav.append(h("a", {href:"#" + sid, "data-nav":sec}, h("span", {text:sec.replace(/^(\d+) /, "$1  ")}), h("span", {class:"cnt", "data-cnt":sec})));
+  }
+  nav.append(h("div", {class:"navnote", text:"* Pflichtfeld · gelbe Hinweise zeigen die Anzeige-Bedingung"}));
+  const dg = $("#dgSelect"); dg.append(h("option", {value:"", text:"– Diagnosegruppe wählen –"}));
+  L.L_DG.forEach(o => dg.append(h("option", {value:o.c, text:`${o.c} · ${o.l}`})));
+  $("#srcNote").textContent = `Anamnese & spezifisches Assessment · Datenstand: ${D.source}`;
+}
+
+/* ---------- Anzeige aktualisieren ---------- */
+function syncControl(id) {
+  const v = state[id];
+  document.querySelectorAll(`[data-id="${id}"]`).forEach(el => {
+    if (el.type === "checkbox") el.checked = Array.isArray(v) && v.includes(el.value);
+    else if (el.type === "radio") el.checked = v === el.value;
+    else el.value = v ?? "";
+  });
+  if (id === "VO-15") $("#dgSelect").value = v ?? "";
+}
+function labelFor(f, v) { const o = optionsOf(f)?.find(o => o.c === String(v)); return o ? o.l : v; }
+function update() {
+  cur = compute(); const {vis, eff} = cur;
+  const missing = {}, errors = {};
+  for (const f of F) {
+    if (isScreen(f)) continue;
+    const row = $(`[data-row="${f.id}"]`); row.hidden = !vis[f.id];
+    if (f.src === "berechnet" || f.src.startsWith("aus ")) {
+      const c = $(`[data-calc="${f.id}"]`), v = eff[f.id];
+      c.textContent = empty(v) ? "–" : labelFor(f, v);
+      if (!empty(v) && f.src.startsWith("aus ")) c.append(h("small", {text:" aus " + f.src.slice(4)}));
+    }
+    if (f.id === "BE-01" || f.id === "BE-02") syncControl(f.id);
+    if (!vis[f.id]) { row.classList.remove("missing"); continue; }
+    const err = fieldError(f, eff[f.id]); $(`[data-err="${f.id}"]`).textContent = err;
+    if (err) errors[f.sec] = (errors[f.sec] || 0) + 1;
+    const miss = needed(f) && empty(eff[f.id]);
+    if (miss) missing[f.sec] = (missing[f.sec] || 0) + 1;
+    row.classList.toggle("missing", checked && miss);
+  }
+  document.querySelectorAll("[data-grp]").forEach(g => g.hidden = ![...g.querySelectorAll("[data-row]")].some(r => !r.hidden));
+  const instruments = activeInstruments(eff, vis);
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const sec = s.dataset.sec;
+    const show = sec.startsWith("4 ") ? instruments.length > 0 : [...s.querySelectorAll("[data-row]")].some(r => !r.hidden);
+    s.hidden = !show; $(`[data-nav="${sec}"]`).classList.toggle("hidden", !show);
+    if (sec.startsWith("4 ")) { instruments.forEach(m => { if (!(scr[m.iid]?.ein)) missing[sec] = (missing[sec] || 0) + 1; }); }
+    const c = $(`[data-cnt="${sec}"]`), n = missing[sec] || 0, e = errors[sec] || 0;
+    c.textContent = n || e ? `${n ? n + " offen" : ""}${n && e ? " · " : ""}${e ? e + " Fehler" : ""}` : "✓";
+    c.className = "cnt " + (n || e ? "open" : "done");
+  });
+  renderScreening(instruments, eff);
+  renderSuggest(eff, vis);
+  renderBanner(eff);
+  return {missing, errors};
+}
+function renderSuggest(eff, vis) {
+  const box = $("#gussSuggest"); if (!box) return;
+  const g = vis["GU-23"] && eff["GU-23"]; box.hidden = !g; if (!g) return;
+  const r = D.guss.find(x => x.range === GUSS_ROW[g]);
+  box.textContent = `GUSS ${eff["GU-22"]} Punkte → ${r.grad}. Vorschlag laut GUSS-Bogen: Speisen ${r.sp} · Getränke ${r.ge}. ${r.more}` + (touched.has("BE-01") || touched.has("BE-02") ? " (manuell angepasst)" : " (vorbefüllt, bitte prüfen)");
+}
+function renderBanner(eff) {
+  const b = $("#dgBanner"), dg = eff["VO-15"];
+  if (!dg) { b.className = "banner neutral"; b.textContent = "Diagnosegruppe oben wählen. Für SC (Kau- und Schluckstörungen) wird das spezifische Dysphagie-Assessment mit KSU, GUSS und Kostform-Empfehlung eingeblendet."; return; }
+  const lbl = L.L_DG.find(o => o.c === dg)?.l || dg;
+  b.className = "banner"; b.textContent = SPECIFIC[dg]
+    ? `${dg} · ${lbl}: Basisanamnese (1–4) plus spezifisches Assessment (Blöcke 5–7). Felder erscheinen je nach Angaben, z. B. Trachealkanülen-Befund nur bei Kanüle, GUSS-Teile nur bis zum Abbruch.`
+    : `${dg} · ${lbl}: Basisanamnese und Screening sind verfügbar. Ein spezifisches Assessment ist in dieser Demo nur für SC hinterlegt.`;
+}
+function renderScreening(instruments, eff) {
+  const box = $("#scrBox"); if (!box) return;
+  instruments.forEach(m => { const src = AUTO_SCORE[m.iid]; if (src) { scr[m.iid] = scr[m.iid] || {}; scr[m.iid].score = eff[src] == null ? (scr[m.iid].manual ? scr[m.iid].score : "") : String(eff[src]); scr[m.iid].auto = eff[src] != null; } });
+  const sig = instruments.map(m => m.iid + ":" + (scr[m.iid]?.auto ? scr[m.iid].score : "")).join("|");
+  if (sig === scrSig) return; scrSig = sig; box.replaceChildren();
+  if (!instruments.length) { box.append(h("div", {class:"empty", text:"Kein Modul aktiv – Verdachtsdiagnose in MV-06 wählen."})); return; }
+  const tb = h("tbody");
+  for (const m of instruments) {
+    const s = scr[m.iid] = scr[m.iid] || {};
+    const radios = L.L_EINORD.map(o => h("label", {class:"chip"}, h("input", {type:"radio", name:"ein_" + m.iid, value:o.c, "data-scr":m.iid, "data-k":"ein", checked: s.ein === o.c}), h("span", {text:o.l})));
+    const checks = L.L_KONSEQ.map(o => h("label", {class:"chip"}, h("input", {type:"checkbox", value:o.c, "data-scr":m.iid, "data-k":"kons", checked: (s.kons || []).includes(o.c)}), h("span", {text:o.l})));
+    tb.append(h("tr", {},
+      h("td", {}, h("div", {text:m.name}), h("div", {class:"meta"}, h("span", {class:"id", text:m.iid}), h("span", {class:"stage", text:m.stage}), m.mod === "DYSPH-TK" ? h("span", {class:"tkb", text:"nur TK"}) : null)),
+      h("td", {}, s.auto ? h("div", {class:"calc", text:s.score}, h("small", {text:" aus " + AUTO_SCORE[m.iid]})) : h("input", {type:"text", value:s.score || "", "data-scr":m.iid, "data-k":"score", placeholder:m.fmt || "Score", "aria-label":"Score " + m.name})),
+      h("td", {}, h("div", {class:"chips"}, radios)),
+      h("td", {}, h("div", {class:"chips"}, checks))));
+  }
+  box.append(h("table", {}, h("thead", {}, h("tr", {}, ["Instrument","Score / Befund","Einordnung","Konsequenz"].map(t => h("th", {text:t})))), tb));
+}
+
+/* ---------- Ereignisse ---------- */
+function setValue(id, v, user = true) { state[id] = v; if (user) touched.add(id); syncControl(id); }
+function applyDG(dg) {
+  setValue("VO-15", dg);
+  const add = DG_TO_VD[dg] || [];
+  if (add.length) {
+    const cur = Array.isArray(state["MV-06"]) ? state["MV-06"] : [];
+    const next = [...new Set([...cur, ...add])];
+    if (next.length !== cur.length) { setValue("MV-06", next, false); toast(`Verdachtsdiagnose ergänzt: ${add.map(c => L.L_VD.find(o => o.c === c)?.l).join(", ")}`); }
+    if (!state["MV-05"]) setValue("MV-05", "A", false);
+  }
+}
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.id === "dgSelect") { applyDG(el.value); update(); if (SPECIFIC[el.value]) document.getElementById("s5")?.scrollIntoView({behavior:"smooth"}); return; }
+  if (el.dataset.scr) {
+    const s = scr[el.dataset.scr] = scr[el.dataset.scr] || {};
+    if (el.dataset.k === "ein") s.ein = el.value;
+    if (el.dataset.k === "kons") { s.kons = [...document.querySelectorAll(`[data-scr="${el.dataset.scr}"][data-k="kons"]:checked`)].map(x => x.value); }
+    update(); return;
+  }
+  const id = el.dataset.id; if (!id) return;
+  const f = byId[id];
+  if (el.type === "checkbox") {
+    let vals = [...document.querySelectorAll(`[data-id="${id}"]:checked`)].map(x => x.value);
+    if (el.checked && el.value === "KEINE") vals = ["KEINE"]; else if (el.checked) vals = vals.filter(v => v !== "KEINE");
+    setValue(id, vals);
+  } else setValue(id, el.value);
+  if (id === "VO-15") applyDG(el.value);
+  update();
+});
+document.addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.scr && el.dataset.k === "score") { const s = scr[el.dataset.scr] = scr[el.dataset.scr] || {}; s.score = el.value; s.manual = true; return; }
+  if (el.dataset.id && (el.tagName === "TEXTAREA" || (el.tagName === "INPUT" && !["radio","checkbox"].includes(el.type)))) { state[el.dataset.id] = el.value; touched.add(el.dataset.id); update(); }
+});
+
+$("#btnCheck").onclick = () => {
+  checked = true; const {missing, errors} = update();
+  const n = Object.values(missing).reduce((a, b) => a + b, 0), e = Object.values(errors).reduce((a, b) => a + b, 0);
+  const first = document.querySelector(".row.missing:not([hidden])") || document.querySelector(".err:not(:empty)");
+  if (first) first.scrollIntoView({behavior:"smooth", block:"center"});
+  toast(n || e ? `${n} Pflichtangaben offen, ${e} Formatfehler` : "Alle Pflichtangaben vollständig");
+};
+$("#btnExport").onclick = () => {
+  const {vis, eff} = compute(), felder = {};
+  F.forEach(f => { if (!isScreen(f) && vis[f.id] && !empty(eff[f.id])) felder[f.key] = eff[f.id]; });
+  const screening = activeInstruments(eff, vis).map(m => ({sc_modul:m.mod, sc_instrument:m.iid, sc_datum: eff["VO-23"] || null, sc_score: scr[m.iid]?.score || null, sc_einordnung: scr[m.iid]?.ein || null, sc_konsequenz: scr[m.iid]?.kons || []}));
+  const out = {schema: D.source, exportiert_am: new Date().toISOString(), diagnosegruppe: eff["VO-15"] || null, felder, screening};
+  const a = h("a", {href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], {type:"application/json"})), download: `anamnese_${(eff["VO-23"] || new Date().toISOString().slice(0,10))}.json`});
+  document.body.append(a); a.click(); a.remove(); toast("JSON exportiert");
+};
+$("#btnPrint").onclick = () => window.print();
+$("#btnReset").onclick = () => { if (!confirm("Alle Eingaben verwerfen?")) return; state = {}; scr = {}; touched = new Set(); checked = false; scrSig = ""; F.forEach(f => syncControl(f.id)); update(); window.scrollTo({top:0}); };
+$("#btnExample").onclick = () => {
+  state = {}; scr = {}; touched = new Set(); scrSig = "";
+  const override = {"GU-13":"0"};                        // Husten bei flüssig → Abbruch, GUSS 14 = mittelgradig
+  for (const f of F) {
+    if (isScreen(f) || f.src === "berechnet" || f.src.startsWith("aus ") || f.id === "BE-01" || f.id === "BE-02") continue;
+    const ex = override[f.id] ?? f.ex; if (empty(ex)) continue;
+    state[f.id] = isMulti(f) ? ex.split(/\s*;\s*/) : ex;
+  }
+  state["VO-15"] = "SC"; state["MV-06"] = ["DYSPH"]; state["MV-27"] = "KORREKT"; state["MV-32"] = "nein";
+  F.forEach(f => syncControl(f.id)); update();
+  activeInstruments(cur.eff, cur.vis).forEach(m => { scr[m.iid] = {...(scr[m.iid] || {}), ein:"AUFF", kons: m.iid === "DYSPH-S3" ? ["TH","FEES"] : ["TH"]}; });
+  scrSig = ""; update(); toast("Beispielfall SC geladen (Werte aus der Spalte Beispielwert)");
+};
+
+build(); update();
+</script>
+</body>
+</html>
