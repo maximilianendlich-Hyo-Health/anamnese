@@ -1,6 +1,6 @@
 # HYO Health – Ersttermin-Anamnese (Demo)
 
-Schlanke Web-App für den logopädischen Ersttermin: Basisanamnese (Abschnitte 1–4) plus spezifisches Assessment je Diagnosegruppe. In dieser Demo ist das Assessment für **SC (Kau- und Schluckstörungen)** hinterlegt: Dysphagie- und TK-Anamnese, KSU, Trachealkanülen-Befund, GUSS mit Abbruchregel und Auswertung, Kostform-Empfehlung, Abschluss.
+Schlanke Web-App für den logopädischen Ersttermin: Basisanamnese (Abschnitte 1–4) plus spezifisches Assessment je Diagnosegruppe. In dieser Demo ist das Assessment für **SC (Kau- und Schluckstörungen)** hinterlegt: Dysphagie- und TK-Anamnese, KSU, Trachealkanülen-Befund, GUSS mit Abbruchregel und Auswertung, Kostform-Empfehlung, Abschluss und – wenn durchgeführt – der FEES-Befund (Block 8) mit PAS, Yale, Murray, FEDSS und Kostform-Vorschlag aus der FEDSS.
 
 Eine einzige HTML-Datei, kein Server, keine Abhängigkeiten im Browser. Eingaben bleiben im Browser und werden weder gespeichert noch übertragen.
 
@@ -11,7 +11,8 @@ Eine einzige HTML-Datei, kein Server, keine Abhängigkeiten im Browser. Eingaben
 - Berechnete Felder: GUSS-Teilsummen, Gesamtwert, Schweregrad, BODS-Summe; Kostform-Vorschlag aus der GUSS-Auswertung
 - Screening-Tabelle je aktivem Modul, Scores aus GUSS/TK-Befund automatisch übernommen
 - Pflichtfeld- und Formatprüfung (Regex, Wertebereiche)
-- Export als JSON mit den technischen Schlüsseln (z. B. für tinana/Langdock)
+- Export als JSON mit den technischen Schlüsseln; „JSON laden“ stellt einen früheren Stand wieder her (z. B. für eine spätere FEES)
+- „An Langdock senden“: schickt die Daten an den Webhook des Workflows „Ersttermin SC“ (Einrichtung über ⚙, Stammdaten optional weggelassen)
 - Beispielfall SC (Werte aus der Spalte „Beispielwert“), Druckansicht, Hell/Dunkel-Modus
 
 ## Aufbau
@@ -21,6 +22,7 @@ data/HYO_Anamnese_Datenfelder.xlsx   Quelle: Felder, Wertelisten, Module, GUSS-A
 tools/template.html                  Oberfläche und Logik
 tools/build.py                       erzeugt index.html aus Excel + Template
 index.html                           fertige App (generiert)
+langdock/                            Bausteine für den Langdock-Workflow (Code-Knoten, Agent-Anweisung, Schema, Testfall)
 .github/workflows/pages.yml          baut und veröffentlicht bei jedem Push auf main
 ```
 

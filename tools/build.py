@@ -29,9 +29,10 @@ def parse_atom(text):
     if m:
         vals = [v.strip() for v in re.split(r"\s+oder\s+", m.group(2))]
         return {"op": "has", "f": m.group(1), "v": vals}
-    m = re.fullmatch(rf"({ID}) (=|≠) (.+)", t)
+    m = re.fullmatch(rf"({ID}) (=|≠|≥|≤) (.+)", t)
     if m:
-        return {"op": "eq" if m.group(2) == "=" else "ne", "f": m.group(1), "v": m.group(3).strip()}
+        op = {"=": "eq", "≠": "ne", "≥": "ge", "≤": "le"}[m.group(2)]
+        return {"op": op, "f": m.group(1), "v": m.group(3).strip()}
     m = re.fullmatch(rf"({ID}) (angezeigt|befüllt|ausgefüllt)", t)
     if m:
         return {"op": "shown" if m.group(2) == "angezeigt" else "filled", "f": m.group(1)}
@@ -81,6 +82,7 @@ def main():
             "condText": cond_text or "", "cond": parse_condition(cond_text),
             "ex": "" if r.get("Beispielwert") is None else str(r["Beispielwert"]),
             "hint": r.get("Hinweis") or "", "scope": r.get("Gilt für") or "alle",
+            "excl": (re.search(r"\b([A-Z_]+) schließt andere Codes aus", r.get("Hinweis") or "") or [None, None])[1],
         })
 
     modules = []
@@ -97,6 +99,16 @@ def main():
 
     ablauf = [list(r) for r in wb["Ablauf Ersttermin SC"].iter_rows(min_row=2, values_only=True) if r[0]]
 
+    def kost(txt):  # "4 – püriert" -> "4", "NPO (nichts oral)" -> "NPO"
+        t = str(txt or "").strip()
+        return "NPO" if t.startswith("NPO") else t.split(" ")[0]
+    fedss = {}
+    if "FEDSS-Auswertung" in wb.sheetnames:
+        for r in wb["FEDSS-Auswertung"].iter_rows(min_row=2, max_col=6, values_only=True):
+            if r[0] is not None and str(r[0]).strip().isdigit():
+                fedss[str(r[0]).strip()] = {"befund": r[1], "empf": r[2], "sp": kost(r[3]), "ge": kost(r[4]),
+                                            "sp_txt": r[3], "ge_txt": r[4], "more": r[5] if r[5] not in (None, "–") else ""}
+
     ids = [f["id"] for f in fields]
     for f in fields:
         for grp in f["cond"] or []:
@@ -104,7 +116,7 @@ def main():
                 if a["f"] not in ids and a["f"] != "SC-06":
                     sys.exit(f"{f['id']}: Bedingung verweist auf unbekanntes Feld {a['f']}")
 
-    data = {"fields": fields, "lists": lists, "modules": modules, "guss": guss, "ablauf": ablauf,
+    data = {"fields": fields, "lists": lists, "modules": modules, "guss": guss, "ablauf": ablauf, "fedss": fedss,
             "source": XLSX.name}
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = TEMPLATE.read_text(encoding="utf-8").replace("/*__DATA__*/null", payload)

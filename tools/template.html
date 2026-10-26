@@ -19,7 +19,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font)}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
-.hwrap{max-width:1180px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;align-items:center}
+.hwrap{max-width:1180px;margin:0 auto;padding:10px 16px;display:grid;grid-template-columns:minmax(240px,auto) minmax(0,1fr);gap:10px 16px;align-items:center}
 .brand{font-weight:650;letter-spacing:.2px}.brand small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .dg{grid-column:1/-1;grid-row:2;display:flex;align-items:center;gap:10px;padding-top:2px}
 .dg label{font-size:13px;color:var(--muted)}
@@ -75,6 +75,14 @@ textarea{min-height:70px;resize:vertical}
 .scr td input{max-width:120px}
 .stage{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
 .empty{padding:14px 18px;color:var(--muted);font-size:14px}
+dialog{border:1px solid var(--line2);border-radius:12px;padding:0;background:var(--card);color:var(--ink);width:min(520px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+.dlg{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.dlg h2{margin:0 0 4px;font-size:17px}.dlg label{font-size:14px}.dlg .req{color:var(--err)}
+.dlg input[type=text],.dlg input[type=url],.dlg input[type=password]{max-width:none}
+.dlg .chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--muted)}.dlg .chk input{margin-top:3px}
+.dlgbar{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.status{font-size:13.5px}.status.ok{color:var(--ok)}.status.bad{color:var(--err)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
 .toast.on{opacity:1}
 footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);font-size:12px}
@@ -90,26 +98,55 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);fon
     <div class="actions">
       <button type="button" id="btnExample">Beispielfall SC</button>
       <button type="button" id="btnCheck">Pflichtfelder prüfen</button>
-      <button type="button" id="btnExport" class="primary">JSON exportieren</button>
+      <button type="button" id="btnSend" class="primary">An Langdock senden</button>
+      <button type="button" id="btnExport">JSON exportieren</button>
+      <button type="button" id="btnImport" title="Früheren Stand laden, z. B. für eine spätere FEES">JSON laden</button>
+      <input type="file" id="fileImport" accept="application/json,.json" hidden>
       <button type="button" id="btnPrint">Drucken</button>
       <button type="button" id="btnReset">Zurücksetzen</button>
+      <button type="button" id="btnSettings" aria-label="Langdock-Verbindung einrichten" title="Langdock-Verbindung einrichten">⚙</button>
     </div>
   </div>
 </header>
+<dialog id="dlgSend" aria-labelledby="dlgSendTitle">
+  <form method="dialog" class="dlg">
+    <h2 id="dlgSendTitle">An Langdock senden</h2>
+    <p class="hint">Der Workflow „Ersttermin SC“ erstellt daraus Erstbefund und ggf. Arztrückmeldung. Nichts geht an tinana ohne Freigabe.</p>
+    <label for="sendPid">tinana-Patienten-ID <span class="req">*</span></label>
+    <input id="sendPid" type="text" autocomplete="off" placeholder="z. B. P-10234">
+    <div class="err" id="sendPidErr"></div>
+    <label class="chk"><input id="sendNoStamm" type="checkbox" checked> Stammdaten weglassen (Name, Geburtsdatum, Adresse, Kontakt, Versichertennummer)</label>
+    <div class="hint" id="sendWarn"></div>
+    <div class="status" id="sendStatus" role="status" aria-live="polite"></div>
+    <div class="dlgbar"><button value="cancel" formnovalidate>Abbrechen</button><button type="button" id="sendGo" class="primary">Senden</button></div>
+  </form>
+</dialog>
+<dialog id="dlgSettings" aria-labelledby="dlgSetTitle">
+  <form method="dialog" class="dlg">
+    <h2 id="dlgSetTitle">Langdock-Verbindung</h2>
+    <p class="hint">Einmal pro Gerät eintragen. Werte aus dem Webhook-Trigger des Workflows („Ersttermin SC“).</p>
+    <label for="setUrl">Webhook-URL</label>
+    <input id="setUrl" type="url" placeholder="https://app.langdock.com/api/hooks/workflows/…">
+    <label for="setSecret">Webhook-Secret</label>
+    <input id="setSecret" type="password" autocomplete="off">
+    <div class="err" id="setErr"></div>
+    <div class="dlgbar"><button value="cancel" formnovalidate>Abbrechen</button><button type="button" id="setSave" class="primary">Speichern</button></div>
+  </form>
+</dialog>
 <div class="layout">
   <nav id="nav" aria-label="Abschnitte"></nav>
   <main id="main">
     <div class="banner neutral" id="dgBanner"></div>
   </main>
 </div>
-<footer>Läuft vollständig im Browser: Eingaben werden weder gespeichert noch übertragen und sind nach dem Neuladen weg. Demo-Anwendung – keine echten Patientendaten auf öffentlich gehosteten Seiten eingeben.</footer>
+<footer>Läuft im Browser: Eingaben werden nicht gespeichert und nur mit „An Langdock senden“ übertragen. Keine echten Patientendaten auf öffentlich gehosteten Seiten eingeben.</footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 const D = /*__DATA__*/null;
 const F = D.fields, L = D.lists, byId = Object.fromEntries(F.map(f => [f.id, f]));
-const SPECIFIC = {SC: ["5 ", "6 ", "7 "]};            // Diagnosegruppen mit spezifischem Assessment
+const SPECIFIC = {SC: ["5 ", "6 ", "7 ", "8 "]};            // Diagnosegruppen mit spezifischem Assessment
 const DG_TO_VD = {SC:["DYSPH"], SCZ:["MFS"], OFZ:["MFS"], SP5:["APH"], SP6:["DYSAR"], ST1:["DYSPHON"], ST2:["DYSPHON"], ST3:["DYSPHON"], ST4:["DYSPHON"]};
-const AUTO_SCORE = {"DYSPH-S3":"GU-22", "TK-S1":"TB-03", "TK-S2":"TB-04", "TK-O1":"TB-07"};
+const AUTO_SCORE = {"DYSPH-S3":"GU-22", "DYSPH-V1":"FE-50", "DYSPH-V2":"FE-51", "TK-S1":"TB-03", "TK-S2":"TB-04", "TK-O1":"TB-07"};
 const GRADE_TO_KOST = {KEINE:["7","0"], LEICHT:["6","0"], MITTEL:["4","1"], SCHWER:["NPO","NPO"]};
 const GUSS_ROW = {KEINE:"20", LEICHT:"15–19", MITTEL:"10–14", SCHWER:"0–9"};
 const isScreen = f => f.sec.startsWith("4 ");
@@ -139,8 +176,10 @@ function atom(a, eff, vis) {
   const v = a.f === "SC-06" ? scUnion(eff, vis) : (vis[a.f] ? eff[a.f] : undefined);
   switch (a.op) {
     case "has": { const arr = Array.isArray(v) ? v : (empty(v) ? [] : [v]); return a.v.some(x => arr.includes(x)); }
-    case "eq": return !empty(v) && String(v).toLowerCase() === a.v.toLowerCase();
-    case "ne": return !empty(v) && String(v).toLowerCase() !== a.v.toLowerCase();
+    case "eq": return Array.isArray(v) ? v.some(x => String(x).toLowerCase() === a.v.toLowerCase()) : (!empty(v) && String(v).toLowerCase() === a.v.toLowerCase());
+    case "ne": return Array.isArray(v) ? (v.length > 0 && !v.some(x => String(x).toLowerCase() === a.v.toLowerCase())) : (!empty(v) && String(v).toLowerCase() !== a.v.toLowerCase());
+    case "ge": return num(v) !== null && num(v) >= +a.v;
+    case "le": return num(v) !== null && num(v) <= +a.v;
     case "shown": return !!vis[a.f];
     case "filled": return !empty(v);
   }
@@ -158,23 +197,48 @@ function calc(id, eff, vis) {
     case "GU-16": return sumOf(range(12,15), eff, vis);
     case "GU-21": return sumOf(range(17,20), eff, vis);
     case "GU-22": { let t = 0; for (const p of ["GU-06","GU-11","GU-16","GU-21"]) { if (!vis[p]) continue; if (eff[p] == null) return null; t += eff[p]; } return vis["GU-06"] ? t : null; }
+    case "FE-50": { const v = ["FE-21","FE-26","FE-31","FE-36"].filter(id => vis[id]).map(id => num(eff[id])).filter(x => x !== null); return v.length ? Math.max(...v) : null; }
     case "GU-23": { const g = eff["GU-22"]; if (g == null) return null; return g === 20 ? "KEINE" : g >= 15 ? "LEICHT" : g >= 10 ? "MITTEL" : "SCHWER"; }
   }
   return null;
 }
-function compute() {
+function pass() {
   const vis = {}, eff = {};
   for (const f of F) {
     if (isScreen(f)) { vis[f.id] = false; continue; }
     vis[f.id] = evalCond(f.cond, eff, vis);
     if (f.src.startsWith("aus ")) eff[f.id] = eff[f.src.slice(4)];
     else if (f.src === "berechnet") eff[f.id] = calc(f.id, eff, vis);
-    else {
-      if ((f.id === "BE-01" || f.id === "BE-02") && !touched.has(f.id) && eff["GU-23"]) state[f.id] = GRADE_TO_KOST[eff["GU-23"]][f.id === "BE-01" ? 0 : 1];
-      eff[f.id] = state[f.id];
-    }
+    else eff[f.id] = state[f.id];
   }
   return {vis, eff};
+}
+// Kostform-Vorschlag: FEDSS (nach FEES) ersetzt GUSS
+function suggestion(eff, vis) {
+  const fd = vis["FE-51"] && !empty(eff["FE-51"]) && D.fedss[String(eff["FE-51"])];
+  if (fd) return {src: "FEDSS", sp: fd.sp, ge: fd.ge, row: fd, score: eff["FE-51"]};
+  if (vis["GU-23"] && eff["GU-23"]) { const k = GRADE_TO_KOST[eff["GU-23"]]; return {src: "GUSS", sp: k[0], ge: k[1]}; }
+  return null;
+}
+// Auswahl einschränken (FE-41 nur aus FE-40, transstomal nur mit Kanüle)
+function allowed(id, eff) {
+  if (id === "FE-40") return c => c !== "KEINE";
+  if (id === "FE-41") { const sel = Array.isArray(eff["FE-40"]) ? eff["FE-40"] : []; return c => c === "KEINE" || sel.includes(c); }
+  if (id === "FE-05") return c => c !== "TRANSST" || eff["DA-08"] === "JA";
+  return null;
+}
+const PREFILLED = ["BE-01", "BE-02", "FE-07", "FE-52", "FE-05", "FE-40", "FE-41"];
+function compute() {
+  let r = pass(), changed = false;
+  const sg = suggestion(r.eff, r.vis);
+  if (sg) for (const [id, v] of [["BE-01", sg.sp], ["BE-02", sg.ge]]) if (!touched.has(id) && state[id] !== v) { state[id] = v; changed = true; }
+  if (!touched.has("FE-07") && r.vis["FE-07"] && empty(state["FE-07"]) && !empty(r.eff["MV-20"])) { state["FE-07"] = String(r.eff["MV-20"]); changed = true; }
+  const st = r.eff["FE-14"];
+  if (!touched.has("FE-52") && r.vis["FE-52"] && empty(state["FE-52"]) && Array.isArray(st) && st.length && !st.includes("UNAUF")) { state["FE-52"] = ["HNO"]; changed = true; }
+  for (const id of ["FE-05", "FE-40", "FE-41"]) { const ok = allowed(id, r.eff); if (ok && Array.isArray(state[id]) && state[id].some(c => !ok(c))) { state[id] = state[id].filter(ok); changed = true; } }
+  if (changed) r = pass();
+  r.sg = suggestion(r.eff, r.vis);
+  return r;
 }
 function fieldError(f, v) {
   if (empty(v) || Array.isArray(v)) return "";
@@ -262,7 +326,9 @@ function update() {
       c.textContent = empty(v) ? "–" : labelFor(f, v);
       if (!empty(v) && f.src.startsWith("aus ")) c.append(h("small", {text:" aus " + f.src.slice(4)}));
     }
-    if (f.id === "BE-01" || f.id === "BE-02") syncControl(f.id);
+    if (PREFILLED.includes(f.id)) syncControl(f.id);
+    const ok = allowed(f.id, eff);
+    if (ok) row.querySelectorAll("label.chip").forEach(l => l.hidden = !ok(l.querySelector("input").value));
     if (!vis[f.id]) { row.classList.remove("missing"); continue; }
     const err = fieldError(f, eff[f.id]); $(`[data-err="${f.id}"]`).textContent = err;
     if (err) errors[f.sec] = (errors[f.sec] || 0) + 1;
@@ -282,15 +348,21 @@ function update() {
     c.className = "cnt " + (n || e ? "open" : "done");
   });
   renderScreening(instruments, eff);
-  renderSuggest(eff, vis);
+  renderSuggest(eff, vis, cur.sg);
   renderBanner(eff);
   return {missing, errors};
 }
-function renderSuggest(eff, vis) {
+function renderSuggest(eff, vis, sg) {
   const box = $("#gussSuggest"); if (!box) return;
-  const g = vis["GU-23"] && eff["GU-23"]; box.hidden = !g; if (!g) return;
-  const r = D.guss.find(x => x.range === GUSS_ROW[g]);
-  box.textContent = `GUSS ${eff["GU-22"]} Punkte → ${r.grad}. Vorschlag laut GUSS-Bogen: Speisen ${r.sp} · Getränke ${r.ge}. ${r.more}` + (touched.has("BE-01") || touched.has("BE-02") ? " (manuell angepasst)" : " (vorbefüllt, bitte prüfen)");
+  box.hidden = !sg; if (!sg) return;
+  const manual = state["BE-01"] !== sg.sp || state["BE-02"] !== sg.ge;
+  if (sg.src === "FEDSS") {
+    const r = sg.row;
+    box.textContent = `FEDSS ${sg.score} (${r.befund}) → ${r.empf}. Vorschlag: Speisen ${r.sp_txt} · Getränke ${r.ge_txt}.${r.more ? " " + r.more + "." : ""} Vorschlag aus FEDSS, ersetzt den GUSS-Vorschlag` + (manual ? " – Werte manuell abweichend." : ", änderbar.");
+    return;
+  }
+  const r = D.guss.find(x => x.range === GUSS_ROW[eff["GU-23"]]);
+  box.textContent = `GUSS ${eff["GU-22"]} Punkte → ${r.grad}. Vorschlag laut GUSS-Bogen: Speisen ${r.sp} · Getränke ${r.ge}. ${r.more}` + (manual ? " (manuell abweichend)" : " (vorbefüllt, bitte prüfen)");
 }
 function renderBanner(eff) {
   const b = $("#dgBanner"), dg = eff["VO-15"];
@@ -345,7 +417,8 @@ document.addEventListener("change", e => {
   const f = byId[id];
   if (el.type === "checkbox") {
     let vals = [...document.querySelectorAll(`[data-id="${id}"]:checked`)].map(x => x.value);
-    if (el.checked && el.value === "KEINE") vals = ["KEINE"]; else if (el.checked) vals = vals.filter(v => v !== "KEINE");
+    const ex = f.excl || ((optionsOf(f) || []).some(o => o.c === "KEINE") ? "KEINE" : null);
+    if (ex && el.checked && el.value === ex) vals = [ex]; else if (ex && el.checked) vals = vals.filter(v => v !== ex);
     setValue(id, vals);
   } else setValue(id, el.value);
   if (id === "VO-15") applyDG(el.value);
@@ -364,16 +437,87 @@ $("#btnCheck").onclick = () => {
   if (first) first.scrollIntoView({behavior:"smooth", block:"center"});
   toast(n || e ? `${n} Pflichtangaben offen, ${e} Formatfehler` : "Alle Pflichtangaben vollständig");
 };
-$("#btnExport").onclick = () => {
-  const {vis, eff} = compute(), felder = {};
-  F.forEach(f => { if (!isScreen(f) && vis[f.id] && !empty(eff[f.id])) felder[f.key] = eff[f.id]; });
+const STAMMDATEN = ["VO-01","VO-02","VO-03","VO-04","VO-05","VO-06","VO-07","VO-10"];
+function buildPayload(opts = {}) {
+  const {vis, eff} = compute(), felder = {}, lesbar = [];
+  F.forEach(f => {
+    if (isScreen(f) || !vis[f.id] || empty(eff[f.id])) return;
+    if (opts.ohneStammdaten && STAMMDATEN.includes(f.id)) return;
+    const v = eff[f.id]; felder[f.key] = v;
+    lesbar.push({id: f.id, abschnitt: f.sec, gruppe: f.grp, feld: f.label, wert: String(Array.isArray(v) ? v.map(x => labelFor(f, x)).join("; ") : labelFor(f, v))});
+  });
   const screening = activeInstruments(eff, vis).map(m => ({sc_modul:m.mod, sc_instrument:m.iid, sc_datum: eff["VO-23"] || null, sc_score: scr[m.iid]?.score || null, sc_einordnung: scr[m.iid]?.ein || null, sc_konsequenz: scr[m.iid]?.kons || []}));
-  const out = {schema: D.source, exportiert_am: new Date().toISOString(), diagnosegruppe: eff["VO-15"] || null, felder, screening};
-  const a = h("a", {href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], {type:"application/json"})), download: `anamnese_${(eff["VO-23"] || new Date().toISOString().slice(0,10))}.json`});
+  return {schema: D.source, payload_version: 1, gesendet_am: new Date().toISOString(), tinana_patient_id: opts.pid || null,
+    therapeut: eff["VO-24"] || null, diagnosegruppe: eff["VO-15"] || null, stammdaten_enthalten: !opts.ohneStammdaten, felder, lesbar, screening};
+}
+$("#btnExport").onclick = () => {
+  const out = buildPayload(), d = out.felder.vo_aufnahmedatum || out.gesendet_am.slice(0, 10);
+  const a = h("a", {href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], {type:"application/json"})), download: `anamnese_${d}.json`});
   document.body.append(a); a.click(); a.remove(); toast("JSON exportiert");
 };
+
+/* ---------- Langdock ---------- */
+const store = {get(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } },
+               set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }};
+const cfg = () => ({url: store.get("hyo_ld_url"), secret: store.get("hyo_ld_secret")});
+function openSettings() { $("#setUrl").value = cfg().url; $("#setSecret").value = cfg().secret; $("#setErr").textContent = ""; $("#dlgSettings").showModal(); }
+$("#btnSettings").onclick = openSettings;
+$("#setSave").onclick = () => {
+  const url = $("#setUrl").value.trim(), secret = $("#setSecret").value.trim();
+  if (!/^https:\/\/\S+$/.test(url)) { $("#setErr").textContent = "Bitte die vollständige https-Adresse des Webhooks eintragen."; return; }
+  if (!secret) { $("#setErr").textContent = "Bitte das Webhook-Secret eintragen."; return; }
+  if (!store.set("hyo_ld_url", url) || !store.set("hyo_ld_secret", secret)) { $("#setErr").textContent = "Speichern im Browser nicht möglich (privates Fenster?)."; return; }
+  $("#dlgSettings").close(); toast("Langdock-Verbindung gespeichert");
+};
+$("#setUrl").oninput = $("#setSecret").oninput = () => $("#setErr").textContent = "";
+$("#btnSend").onclick = () => {
+  if (!cfg().url || !cfg().secret) { toast("Erst die Langdock-Verbindung einrichten"); openSettings(); return; }
+  checked = true; const {missing, errors} = update();
+  const n = Object.values(missing).reduce((a, b) => a + b, 0), e = Object.values(errors).reduce((a, b) => a + b, 0);
+  $("#sendWarn").textContent = n || e ? `Achtung: ${n} Pflichtangaben offen, ${e} Formatfehler. Der Prüfagent wird darauf hinweisen.` : "";
+  $("#sendStatus").textContent = ""; $("#sendStatus").className = "status"; $("#sendPidErr").textContent = "";
+  $("#sendGo").disabled = false; $("#dlgSend").showModal(); $("#sendPid").focus();
+};
+$("#sendPid").oninput = () => $("#sendPidErr").textContent = "";
+async function postWebhook(url, secret, body) {
+  try {
+    const r = await fetch(url, {method: "POST", headers: {"Content-Type": "application/json", "X-Webhook-Secret": secret}, body});
+    if (r.status === 202 || r.ok) return {ok: true, confirmed: true};
+    return {ok: false, msg: r.status === 400 ? "Langdock lehnt ab (400): Secret oder Workflow-ID prüfen." : r.status === 404 ? "Workflow nicht gefunden (404) – ist er veröffentlicht und eingeschaltet?" : r.status === 429 ? "Limit erreicht (429) – später erneut senden." : `Langdock antwortet mit ${r.status}.`};
+  } catch (err) {
+    // Browser blockiert die Antwort (CORS): ohne Lesezugriff senden, Secret als Parameter
+    try {
+      const u = url + (url.includes("?") ? "&" : "?") + "secret=" + encodeURIComponent(secret);
+      await fetch(u, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain"}, body});
+      return {ok: true, confirmed: false};
+    } catch (err2) { return {ok: false, msg: "Keine Verbindung zu Langdock (Netzwerk?)."}; }
+  }
+}
+$("#sendGo").onclick = async () => {
+  const pid = $("#sendPid").value.trim();
+  if (!pid) { $("#sendPidErr").textContent = "tinana-Patienten-ID eintragen."; $("#sendPid").focus(); return; }
+  const st = $("#sendStatus"); $("#sendGo").disabled = true; st.className = "status"; st.textContent = "Wird gesendet …";
+  const res = await postWebhook(cfg().url, cfg().secret, JSON.stringify(buildPayload({pid, ohneStammdaten: $("#sendNoStamm").checked})));
+  if (!res.ok) { st.className = "status bad"; st.textContent = res.msg; $("#sendGo").disabled = false; return; }
+  st.className = "status ok";
+  st.textContent = res.confirmed ? "Von Langdock angenommen. Die Freigabe erscheint im Langdock-Posteingang." : "Gesendet. Bitte im Langdock-Monitor prüfen, ob der Lauf gestartet ist.";
+  setTimeout(() => { $("#dlgSend").close(); if (confirm("Gesendet. Formular jetzt leeren? (empfohlen auf geteilten Geräten)")) resetForm(); }, 900);
+};
 $("#btnPrint").onclick = () => window.print();
-$("#btnReset").onclick = () => { if (!confirm("Alle Eingaben verwerfen?")) return; state = {}; scr = {}; touched = new Set(); checked = false; scrSig = ""; F.forEach(f => syncControl(f.id)); update(); window.scrollTo({top:0}); };
+$("#btnImport").onclick = () => $("#fileImport").click();
+$("#fileImport").onchange = async e => {
+  const file = e.target.files[0]; e.target.value = ""; if (!file) return;
+  let p; try { p = JSON.parse(await file.text()); } catch (err) { toast("Datei ist kein gültiges JSON"); return; }
+  const felder = p && p.felder; if (!felder || typeof felder !== "object") { toast("Keine Formulardaten gefunden (Feld 'felder' fehlt)"); return; }
+  const byKey = Object.fromEntries(F.map(f => [f.key, f])); let n = 0;
+  state = {}; scr = {}; touched = new Set(); checked = false; scrSig = "";
+  for (const [k, v] of Object.entries(felder)) { const f = byKey[k]; if (!f || f.src === "berechnet" || f.src.startsWith("aus ")) continue; state[f.id] = v; touched.add(f.id); n++; }
+  (p.screening || []).forEach(s => { scr[s.sc_instrument] = {score: s.sc_score || "", ein: s.sc_einordnung || undefined, kons: s.sc_konsequenz || [], manual: !!s.sc_score}; });
+  F.forEach(f => syncControl(f.id)); update();
+  toast(`${n} Felder geladen. Für eine spätere FEES: Ausgangslage (DA-08, DA-10–15) prüfen und Block 8 ausfüllen.`);
+};
+function resetForm() { state = {}; scr = {}; touched = new Set(); checked = false; scrSig = ""; F.forEach(f => syncControl(f.id)); update(); window.scrollTo({top:0}); }
+$("#btnReset").onclick = () => { if (confirm("Alle Eingaben verwerfen?")) resetForm(); };
 $("#btnExample").onclick = () => {
   state = {}; scr = {}; touched = new Set(); scrSig = "";
   const override = {"GU-13":"0"};                        // Husten bei flüssig → Abbruch, GUSS 14 = mittelgradig
