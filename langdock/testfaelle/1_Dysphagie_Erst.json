@@ -1,0 +1,1363 @@
+{
+  "schema": "HYO_Anamnese_Datenfelder.xlsx",
+  "payload_version": 1,
+  "gesendet_am": "2026-10-28T08:44:35.608Z",
+  "tinana_patient_id": "P-TEST-0001",
+  "therapeut": "MH",
+  "diagnosegruppe": "SC",
+  "stammdaten_enthalten": false,
+  "felder": {
+    "vo_kasse": "AOK Nordost",
+    "vo_ik_kasse": "109519005",
+    "vo_arzt_name": "Dr. M. Beispiel, Neurologie",
+    "vo_bsnr": "721234500",
+    "vo_lanr": "123456701",
+    "vo_icd10": "I63.5",
+    "vo_diagnosegruppe": "SC",
+    "vo_leitsymptomatik": "a",
+    "vo_ausstellungsdatum": "2026-10-15",
+    "vo_heilmittel": "Schlucktherapie-45",
+    "vo_menge": "10",
+    "vo_frequenz": "2x wöchentlich",
+    "vo_hausbesuch": "nein",
+    "vo_dringlich": "nein",
+    "vo_aufnahmedatum": "2026-10-23",
+    "vo_aufnehmende": "MH",
+    "vo_terminart": "ERST",
+    "mv_vo_icd10": "I63.5",
+    "mv_diagnosegruppe": "SC",
+    "mv_zusatz_icd10": "J44.9; F03",
+    "mv_ereignisdatum": "2026-09-02",
+    "mv_vd_quelle": "B",
+    "mv_vd": [
+      "DYSPH"
+    ],
+    "mv_auskunft": [
+      "PAT",
+      "ANGEH"
+    ],
+    "mv_vortherapie": [
+      "AKUT",
+      "REHA"
+    ],
+    "mv_vortherapie_erfolg": "TEIL",
+    "mv_risiko_vigilanz": "UNAUF",
+    "mv_risiko_az": "AUFF",
+    "mv_risiko_ernaehrung": "AUFF",
+    "mv_risiko_sturz": "UNAUF",
+    "mv_risiko_pulmonal": "UNAUF",
+    "mv_spo2_ruhe": "96",
+    "mv_allergie_nahrung": [
+      "KEINE"
+    ],
+    "mv_allergie_material": [
+      "LATEX"
+    ],
+    "mv_allergie_fees": [
+      "KEINE"
+    ],
+    "mv_dg_pruefung": "KORREKT",
+    "mv_zus_dg_vorhanden": "nein",
+    "la_versorgung": [
+      "ANGEH",
+      "PD"
+    ],
+    "la_pflegegrad": "3",
+    "la_bezugsperson": "Max Muster (Sohn), +4917012345678",
+    "la_beruf_status": "RENTE",
+    "la_beruf": "Lehrerin",
+    "la_sprachen": "de; tr",
+    "la_hobbys": "Gartenarbeit, Chor",
+    "la_hoeren": "HG",
+    "la_sehen": "BRILLE",
+    "la_zahnstatus": [
+      "TEILP"
+    ],
+    "la_ziel": "wieder mit der Familie essen",
+    "da_beginn": "PLOETZL",
+    "da_dauer": "1_3M",
+    "da_verlauf": "SCHLECHTER",
+    "da_leitsymptome": [
+      "HUST",
+      "STIMME"
+    ],
+    "da_pneumonie_12m": "ja",
+    "da_pneumonie_anzahl": "1",
+    "da_fieber_unklar": "nein",
+    "da_tk": "NEIN",
+    "da_ernaehrungsform": [
+      "ORAL_ANP",
+      "PEG"
+    ],
+    "da_iddsi_speisen": "5",
+    "da_iddsi_getraenke": "2",
+    "da_nahrungsaufnahme": "SELBST",
+    "da_trinknahrung": "ja",
+    "da_trinkmenge_ml": "1200",
+    "da_gewicht_kg": "68",
+    "da_groesse_cm": "172",
+    "da_gewichtsverlust": "5_10",
+    "da_medikamente": [
+      "NEURO",
+      "PARK"
+    ],
+    "da_vorbefund": "FEES",
+    "da_vorbefund_datum": "2026-09-20",
+    "ks_kommunikation": "WIEDERH",
+    "ks_sitzposition": "SELBST",
+    "ks_mund_speichel": [
+      "TROCKEN",
+      "HYG"
+    ],
+    "ks_n7_gesicht": "LI",
+    "ks_n5_kiefer": "UNAUF",
+    "ks_n12_zunge": "LI",
+    "ks_n9_10_gaumensegel": "EINS",
+    "ks_stimme": "HEISER",
+    "ks_larynxhebung": "RED",
+    "gu_einverstaendnis": "PAT",
+    "gu_durchgefuehrt": "ja",
+    "gu_vv_vigilanz": "1",
+    "gu_vv_husten": "1",
+    "gu_vv_speichel": "1",
+    "gu_vv_drooling": "1",
+    "gu_vv_stimme": "1",
+    "gu_vv_summe": 5,
+    "gu_breiig_schluckakt": "2",
+    "gu_breiig_husten": "1",
+    "gu_breiig_drooling": "1",
+    "gu_breiig_stimme": "1",
+    "gu_breiig_summe": 5,
+    "gu_fluessig_schluckakt": "2",
+    "gu_fluessig_husten": "0",
+    "gu_fluessig_drooling": "1",
+    "gu_fluessig_stimme": "1",
+    "gu_fluessig_summe": 4,
+    "gu_gesamt": 14,
+    "gu_schweregrad": "MITTEL",
+    "be_kost_speisen": "4",
+    "be_kost_getraenke": "NPO",
+    "be_essen": [
+      "AUFR",
+      "KINN"
+    ],
+    "be_tabletten": "ZERKL",
+    "be_einnahme": [
+      "BREI",
+      "OKH"
+    ],
+    "be_aufsicht": "AUFS",
+    "ed_schluckphasen": [
+      "ORAL",
+      "PHAR"
+    ],
+    "ed_zielbereiche": [
+      "KOST_SP",
+      "MUNDPFL"
+    ],
+    "ed_ziel_iddsi_speisen": "6",
+    "ed_ziel_zeitraum": "VO1",
+    "ed_empfehlung_an": [
+      "PAT",
+      "ANGEH"
+    ],
+    "ed_diagnostik_status": "FORTS",
+    "fe_durchgefuehrt": "ja",
+    "fe_untersucher": "CS",
+    "fe_person_b": "MH",
+    "fe_einwilligung": "PAT",
+    "fe_video": "GESP",
+    "fe_zugang": [
+      "NASE_RE"
+    ],
+    "fe_spo2_start": "96",
+    "fe_puls_start": "78",
+    "fe_spo2_ende": "95",
+    "fe_puls_ende": "80",
+    "fe_velum": "SUFF",
+    "fe_pharynx": "REG",
+    "fe_glottis": [
+      "EINGE_LI",
+      "GS_UNV"
+    ],
+    "fe_struktur": [
+      "UNAUF"
+    ],
+    "fe_murray": "1",
+    "fe_spontanschluck": "PHYS",
+    "fe_sensibilitaet": "1_LI",
+    "fe_breiig_gegeben": [
+      "TL",
+      "EL"
+    ],
+    "fe_breiig_pas": "3",
+    "fe_breiig_zeitpunkt": [
+      "PRAE"
+    ],
+    "fe_breiig_yale_vall": "2",
+    "fe_breiig_yale_sin": "2",
+    "fe_fluessig_gegeben": [
+      "TL",
+      "EL",
+      "SEQ"
+    ],
+    "fe_fluessig_pas": "3",
+    "fe_fluessig_zeitpunkt": [
+      "PRAE"
+    ],
+    "fe_fluessig_yale_vall": "2",
+    "fe_fluessig_yale_sin": "2",
+    "fe_fest_gegeben": "JA",
+    "fe_fest_pas": "3",
+    "fe_fest_zeitpunkt": [
+      "PRAE"
+    ],
+    "fe_fest_yale_vall": "2",
+    "fe_fest_yale_sin": "2",
+    "fe_tabl_gegeben": "NICHT",
+    "fe_leaking": [
+      "FLUESS"
+    ],
+    "fe_reinigung": "2",
+    "fe_komp_geprueft": [
+      "KINN",
+      "SUPRA"
+    ],
+    "fe_komp_wirksam": [
+      "KINN"
+    ],
+    "fe_pas_max": 3,
+    "fe_fedss": "3",
+    "fe_abklaerung": [
+      "HNO"
+    ],
+    "fe_ereignis": [
+      "KEINES"
+    ]
+  },
+  "lesbar": [
+    {
+      "id": "VO-08",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Versicherung",
+      "feld": "Krankenkasse",
+      "wert": "AOK Nordost"
+    },
+    {
+      "id": "VO-09",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Versicherung",
+      "feld": "IK-Nummer Kasse",
+      "wert": "109519005"
+    },
+    {
+      "id": "VO-11",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordner",
+      "feld": "Zuweisende:r Ärztin/Arzt bzw. Praxis",
+      "wert": "Dr. M. Beispiel, Neurologie"
+    },
+    {
+      "id": "VO-12",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordner",
+      "feld": "Betriebsstättennummer (BSNR)",
+      "wert": "721234500"
+    },
+    {
+      "id": "VO-13",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordner",
+      "feld": "Lebenslange Arztnummer (LANR)",
+      "wert": "123456701"
+    },
+    {
+      "id": "VO-14",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Diagnose (ICD-10-GM)",
+      "wert": "I63.5"
+    },
+    {
+      "id": "VO-15",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Diagnosegruppe",
+      "wert": "Krankhafte Störungen des Schluckakts"
+    },
+    {
+      "id": "VO-16",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Leitsymptomatik",
+      "wert": "a"
+    },
+    {
+      "id": "VO-17",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Verordnung ausgestellt am",
+      "wert": "2026-10-15"
+    },
+    {
+      "id": "VO-18",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Heilmittel",
+      "wert": "Schlucktherapie-45"
+    },
+    {
+      "id": "VO-19",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Verordnungsmenge",
+      "wert": "10"
+    },
+    {
+      "id": "VO-20",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Therapiefrequenz",
+      "wert": "2x wöchentlich"
+    },
+    {
+      "id": "VO-21",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Hausbesuch",
+      "wert": "nein"
+    },
+    {
+      "id": "VO-22",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Verordnung",
+      "feld": "Dringlicher Behandlungsbedarf (14 Tage)",
+      "wert": "nein"
+    },
+    {
+      "id": "VO-23",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Aufnahme",
+      "feld": "Aufnahmedatum",
+      "wert": "2026-10-23"
+    },
+    {
+      "id": "VO-24",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Aufnahme",
+      "feld": "Aufnehmende Logopäd:in",
+      "wert": "MH"
+    },
+    {
+      "id": "VO-25",
+      "abschnitt": "1 Verordnungsdaten",
+      "gruppe": "Aufnahme",
+      "feld": "Terminart",
+      "wert": "Ersttermin / Erstdiagnostik"
+    },
+    {
+      "id": "MV-01",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosen",
+      "feld": "Verordnete Diagnose (ICD-10)",
+      "wert": "I63.5"
+    },
+    {
+      "id": "MV-02",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosen",
+      "feld": "Diagnosegruppe",
+      "wert": "Krankhafte Störungen des Schluckakts"
+    },
+    {
+      "id": "MV-03",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosen",
+      "feld": "Relevante Zusatzdiagnosen (ICD-10)",
+      "wert": "J44.9; F03"
+    },
+    {
+      "id": "MV-04",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosen",
+      "feld": "Ereignisdatum / Erkrankungsbeginn",
+      "wert": "2026-09-02"
+    },
+    {
+      "id": "MV-05",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Verdachtsdiagnose",
+      "feld": "Logopädische Verdachtsdiagnose – Quelle",
+      "wert": "Auswahl aus Liste"
+    },
+    {
+      "id": "MV-06",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Verdachtsdiagnose",
+      "feld": "Logopädische Verdachtsdiagnose",
+      "wert": "Dysphagie"
+    },
+    {
+      "id": "MV-45",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Erhebung und Vorbehandlung",
+      "feld": "Angaben erfolgen durch",
+      "wert": "Patient:in; An-/Zugehörige bzw. Bezugsperson"
+    },
+    {
+      "id": "MV-47",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Erhebung und Vorbehandlung",
+      "feld": "Bisherige logopädische Therapie",
+      "wert": "Akutklinik; Rehabilitation"
+    },
+    {
+      "id": "MV-48",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Erhebung und Vorbehandlung",
+      "feld": "Erfolg der bisherigen Therapie",
+      "wert": "ja, teilweiser Erfolg"
+    },
+    {
+      "id": "MV-15",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "Compliance / Vigilanz",
+      "wert": "unauffällig"
+    },
+    {
+      "id": "MV-16",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "AZ / Herz-Kreislauf",
+      "wert": "eingeschränkt / Risiko"
+    },
+    {
+      "id": "MV-17",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "Malnutrition / Dehydration",
+      "wert": "eingeschränkt / Risiko"
+    },
+    {
+      "id": "MV-18",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "Mobilität & Sturz",
+      "wert": "unauffällig"
+    },
+    {
+      "id": "MV-19",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "Pulmonale Auffälligkeiten",
+      "wert": "unauffällig"
+    },
+    {
+      "id": "MV-20",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Risikoprofil",
+      "feld": "SpO₂ in Ruhe",
+      "wert": "96"
+    },
+    {
+      "id": "MV-22",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Allergien",
+      "feld": "Nahrungsmittelallergien",
+      "wert": "keine bekannt"
+    },
+    {
+      "id": "MV-24",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Allergien",
+      "feld": "Materialallergien",
+      "wert": "Latex"
+    },
+    {
+      "id": "MV-26",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Allergien",
+      "feld": "FEES-relevante Allergien",
+      "wert": "keine bekannt"
+    },
+    {
+      "id": "MV-27",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosegruppe – Prüfung & Rückmeldung",
+      "feld": "Ärztliche Diagnosegruppe aus logopädischer Sicht",
+      "wert": "korrekt"
+    },
+    {
+      "id": "MV-32",
+      "abschnitt": "2 Medizinische Vorgeschichte",
+      "gruppe": "Diagnosegruppe – Prüfung & Rückmeldung",
+      "feld": "Zusätzliche Diagnosegruppe aus logopädischer Sicht",
+      "wert": "nein"
+    },
+    {
+      "id": "LA-01",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Versorgung",
+      "feld": "Häusliche Versorgung",
+      "wert": "Unterstützung durch Angehörige; ambulanter Pflegedienst"
+    },
+    {
+      "id": "LA-02",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Versorgung",
+      "feld": "Pflegegrad",
+      "wert": "PG 3"
+    },
+    {
+      "id": "LA-03",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Versorgung",
+      "feld": "Bezugsperson / Kontakt",
+      "wert": "Max Muster (Sohn), +4917012345678"
+    },
+    {
+      "id": "LA-04",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Beruf",
+      "feld": "Berufliche Situation",
+      "wert": "in Rente"
+    },
+    {
+      "id": "LA-06",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Beruf",
+      "feld": "Beruf (aktuell bzw. zuletzt)",
+      "wert": "Lehrerin"
+    },
+    {
+      "id": "LA-07",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Kommunikation",
+      "feld": "Muttersprache / weitere Sprachen",
+      "wert": "de; tr"
+    },
+    {
+      "id": "LA-08",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Alltag",
+      "feld": "Interessen und Hobbys",
+      "wert": "Gartenarbeit, Chor"
+    },
+    {
+      "id": "LA-09",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Rahmenbedingungen",
+      "feld": "Hören",
+      "wert": "Hörgerät"
+    },
+    {
+      "id": "LA-10",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Rahmenbedingungen",
+      "feld": "Sehen",
+      "wert": "Brille"
+    },
+    {
+      "id": "LA-11",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Rahmenbedingungen",
+      "feld": "Zahnstatus",
+      "wert": "Teilprothese"
+    },
+    {
+      "id": "LA-12",
+      "abschnitt": "3 Lebenssituation & Alltag",
+      "gruppe": "Ziele",
+      "feld": "Persönliches Therapieziel (Patient:in / Angehörige)",
+      "wert": "wieder mit der Familie essen"
+    },
+    {
+      "id": "DA-01",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Verlauf",
+      "feld": "Beginn der Schluckstörung",
+      "wert": "plötzlich"
+    },
+    {
+      "id": "DA-02",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Verlauf",
+      "feld": "Dauer der Schluckstörung",
+      "wert": "1–3 Monate"
+    },
+    {
+      "id": "DA-03",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Verlauf",
+      "feld": "Verlauf",
+      "wert": "schlechter / zunehmend"
+    },
+    {
+      "id": "DA-04",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Symptome",
+      "feld": "Leitsymptome (Eigen-/Fremdanamnese)",
+      "wert": "Husten/Räuspern beim Essen oder Trinken; feuchte/gurgelnde Stimme nach dem Schlucken"
+    },
+    {
+      "id": "DA-05",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Symptome",
+      "feld": "Pneumonie in den letzten 12 Monaten",
+      "wert": "ja"
+    },
+    {
+      "id": "DA-06",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Symptome",
+      "feld": "Anzahl Pneumonien (12 Monate)",
+      "wert": "1"
+    },
+    {
+      "id": "DA-07",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Symptome",
+      "feld": "Unklare Fieberschübe",
+      "wert": "nein"
+    },
+    {
+      "id": "DA-08",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Atemweg",
+      "feld": "Trachealkanüle",
+      "wert": "nein"
+    },
+    {
+      "id": "DA-13",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Ernährungsform",
+      "wert": "oral mit Anpassung; PEG/PEJ"
+    },
+    {
+      "id": "DA-14",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Aktuelle Kostform Speisen (IDDSI)",
+      "wert": "5 – zerdrückt & feucht"
+    },
+    {
+      "id": "DA-15",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Aktuelle Kostform Getränke (IDDSI)",
+      "wert": "2 – schwach angedickt"
+    },
+    {
+      "id": "DA-16",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Nahrungsaufnahme",
+      "wert": "selbstständig"
+    },
+    {
+      "id": "DA-17",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Trinknahrung",
+      "wert": "ja"
+    },
+    {
+      "id": "DA-18",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Trinkmenge pro Tag",
+      "wert": "1200"
+    },
+    {
+      "id": "DA-19",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Gewicht",
+      "wert": "68"
+    },
+    {
+      "id": "DA-20",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Körpergröße",
+      "wert": "172"
+    },
+    {
+      "id": "DA-21",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Ernährung",
+      "feld": "Ungewollter Gewichtsverlust (letzte 3–6 Monate)",
+      "wert": "5–10 %"
+    },
+    {
+      "id": "DA-22",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Medikamente",
+      "feld": "Medikamente mit Einfluss auf Schlucken oder Wachheit",
+      "wert": "Neuroleptika; Parkinson-Medikamente (Wirkungsschwankung)"
+    },
+    {
+      "id": "DA-23",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Vorbefund",
+      "feld": "Instrumenteller Vorbefund",
+      "wert": "FEES"
+    },
+    {
+      "id": "DA-24",
+      "abschnitt": "5 Dysphagie- und TK-Anamnese",
+      "gruppe": "Vorbefund",
+      "feld": "Datum des Vorbefunds",
+      "wert": "2026-09-20"
+    },
+    {
+      "id": "KS-01",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Allgemeinstatus",
+      "feld": "Kommunikationsfähigkeit",
+      "wert": "mit Wiederholung"
+    },
+    {
+      "id": "KS-02",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Allgemeinstatus",
+      "feld": "Sitzposition / Rumpfkontrolle",
+      "wert": "aufrecht, selbstständig"
+    },
+    {
+      "id": "KS-03",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Orale Inspektion",
+      "feld": "Mundhöhle und Speichel",
+      "wert": "Mundtrockenheit; Mundhygiene mangelhaft"
+    },
+    {
+      "id": "KS-04",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Lippen / Gesicht (N. VII)",
+      "wert": "eingeschränkt links"
+    },
+    {
+      "id": "KS-05",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Kiefer / Kauen (N. V)",
+      "wert": "unauffällig"
+    },
+    {
+      "id": "KS-06",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Zunge (N. XII)",
+      "wert": "eingeschränkt links"
+    },
+    {
+      "id": "KS-07",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Gaumensegel (N. IX/X)",
+      "wert": "einseitig reduziert"
+    },
+    {
+      "id": "KS-08",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Stimme",
+      "wert": "heiser/rau"
+    },
+    {
+      "id": "KS-09",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "KSU Hirnnerven",
+      "feld": "Kehlkopfhebung beim Speichelschluck (palpatorisch)",
+      "wert": "reduziert/verzögert"
+    },
+    {
+      "id": "GU-24",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS",
+      "feld": "Einverständnis zu den Schluckversuchen (mündlich, vor dem GUSS)",
+      "wert": "Patient:in"
+    },
+    {
+      "id": "GU-00",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS",
+      "feld": "GUSS durchgeführt",
+      "wert": "ja"
+    },
+    {
+      "id": "GU-01",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Vigilanz: Patient:in ist mindestens 15 Minuten wach",
+      "wert": "ja (1 Punkt)"
+    },
+    {
+      "id": "GU-02",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Husten und/oder Räuspern willkürlich (zweimal kräftig räuspern)",
+      "wert": "ja (1 Punkt)"
+    },
+    {
+      "id": "GU-03",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Speichelschluck möglich",
+      "wert": "ja (1 Punkt)"
+    },
+    {
+      "id": "GU-04",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Drooling (permanenter Speichelaustritt aus dem Mund)",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-05",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Stimmänderung nach dem Speichelschluck (gurgelig, röchelnd, feucht)",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-06",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 1 Vorversuch (indirekt)",
+      "feld": "Summe Vorversuch",
+      "wert": "5"
+    },
+    {
+      "id": "GU-07",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 2 breiig (IDDSI 3)",
+      "feld": "Schluckakt",
+      "wert": "Schlucken erfolgreich (2)"
+    },
+    {
+      "id": "GU-08",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 2 breiig (IDDSI 3)",
+      "feld": "Husten unwillkürlich (vor, während, nach dem Schlucken, bis 3 Minuten später)",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-09",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 2 breiig (IDDSI 3)",
+      "feld": "Drooling",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-10",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 2 breiig (IDDSI 3)",
+      "feld": "Stimmänderung (vor und nach dem Schluck ‚Ohhh‘ sprechen lassen)",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-11",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 2 breiig (IDDSI 3)",
+      "feld": "Summe breiig (IDDSI 3)",
+      "wert": "5"
+    },
+    {
+      "id": "GU-12",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 3 flüssig (IDDSI 0)",
+      "feld": "Schluckakt",
+      "wert": "Schlucken erfolgreich (2)"
+    },
+    {
+      "id": "GU-13",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 3 flüssig (IDDSI 0)",
+      "feld": "Husten unwillkürlich (vor, während, nach dem Schlucken, bis 3 Minuten später)",
+      "wert": "ja (0 Punkte)"
+    },
+    {
+      "id": "GU-14",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 3 flüssig (IDDSI 0)",
+      "feld": "Drooling",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-15",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 3 flüssig (IDDSI 0)",
+      "feld": "Stimmänderung (vor und nach dem Schluck ‚Ohhh‘ sprechen lassen)",
+      "wert": "nein (1 Punkt)"
+    },
+    {
+      "id": "GU-16",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Teil 3 flüssig (IDDSI 0)",
+      "feld": "Summe flüssig (IDDSI 0)",
+      "wert": "4"
+    },
+    {
+      "id": "GU-22",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Auswertung",
+      "feld": "GUSS-Gesamtwert",
+      "wert": "14"
+    },
+    {
+      "id": "GU-23",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "GUSS Auswertung",
+      "feld": "Schweregrad laut GUSS-Auswertung",
+      "wert": "mittelgradige Dysphagie (10–14)"
+    },
+    {
+      "id": "BE-01",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Empfohlene Kostform Speisen (IDDSI)",
+      "wert": "4 – püriert"
+    },
+    {
+      "id": "BE-02",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Empfohlene Kostform Getränke (IDDSI)",
+      "wert": "nichts oral"
+    },
+    {
+      "id": "BE-03",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Empfehlungen beim Essen",
+      "wert": "aufrechte Sitzposition; Kinn zur Brust"
+    },
+    {
+      "id": "BE-04",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Tabletten / Kapseln",
+      "wert": "zerkleinert"
+    },
+    {
+      "id": "BE-05",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Einnahmehinweise",
+      "wert": "mit Breikost; in Oberkörperhochlagerung"
+    },
+    {
+      "id": "BE-06",
+      "abschnitt": "6 KSU und GUSS",
+      "gruppe": "Empfehlung",
+      "feld": "Aufsicht beim Essen",
+      "wert": "unter Aufsicht"
+    },
+    {
+      "id": "ED-01",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Befundzusammenfassung",
+      "feld": "Betroffene Schluckphase(n)",
+      "wert": "oral; pharyngeal"
+    },
+    {
+      "id": "ED-02",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Therapieziele",
+      "feld": "Zielbereiche",
+      "wert": "Kostaufbau Speisen; Mundpflege/Pneumonieprophylaxe"
+    },
+    {
+      "id": "ED-03",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Therapieziele",
+      "feld": "Ziel-Kostform Speisen (IDDSI)",
+      "wert": "6 – weich & mundgerecht"
+    },
+    {
+      "id": "ED-05",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Therapieziele",
+      "feld": "Zeitraum der Ziele",
+      "wert": "bis Ende dieser Verordnung"
+    },
+    {
+      "id": "ED-06",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Abschluss",
+      "feld": "Kostform-Empfehlung ausgehändigt an",
+      "wert": "Patient:in; Angehörige"
+    },
+    {
+      "id": "ED-07",
+      "abschnitt": "7 Abschluss Erstdiagnostik",
+      "gruppe": "Abschluss",
+      "feld": "Status der Diagnostik",
+      "wert": "Fortsetzung in der nächsten Sitzung bzw. ersten Therapieeinheit"
+    },
+    {
+      "id": "FE-00",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "FEES durchgeführt",
+      "wert": "ja"
+    },
+    {
+      "id": "FE-01",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Untersucher:in",
+      "wert": "CS"
+    },
+    {
+      "id": "FE-02",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Person B (Assistenz)",
+      "wert": "MH"
+    },
+    {
+      "id": "FE-03",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Einwilligung (Bogen HYO-FEES-01-F1)",
+      "wert": "Patient:in"
+    },
+    {
+      "id": "FE-04",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Video",
+      "wert": "gespeichert"
+    },
+    {
+      "id": "FE-05",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Zugang",
+      "wert": "Nase rechts"
+    },
+    {
+      "id": "FE-07",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "SpO₂ Start",
+      "wert": "96"
+    },
+    {
+      "id": "FE-08",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Puls Start",
+      "wert": "78"
+    },
+    {
+      "id": "FE-09",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "SpO₂ Ende",
+      "wert": "95"
+    },
+    {
+      "id": "FE-10",
+      "abschnitt": "8 FEES",
+      "gruppe": "Rahmen",
+      "feld": "Puls Ende",
+      "wert": "80"
+    },
+    {
+      "id": "FE-11",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Velopharyngealer Abschluss",
+      "wert": "suffizient"
+    },
+    {
+      "id": "FE-12",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Pharynxaktivität",
+      "wert": "beidseits regelrecht"
+    },
+    {
+      "id": "FE-13",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Stimmlippen / Glottisschluss",
+      "wert": "Beweglichkeit eingeschränkt links; Glottisschluss unvollständig"
+    },
+    {
+      "id": "FE-14",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Strukturbefund",
+      "wert": "unauffällig"
+    },
+    {
+      "id": "FE-16",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Sekret (Murray-Skala)",
+      "wert": "1 – Ansammlung in Valleculae / Sinus piriformes"
+    },
+    {
+      "id": "FE-17",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Spontanschlucke (über 2 Min. Ruhebeobachtung gezählt)",
+      "wert": "physiologisch (≥ 2 in 2 Min.; Richtwert ca. 1×/Min.)"
+    },
+    {
+      "id": "FE-18",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ruhebefund",
+      "feld": "Sensibilität (schlechtester Wert und Seite)",
+      "wert": "1 – reduziert links"
+    },
+    {
+      "id": "FE-20",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck breiig",
+      "feld": "breiig (IDDSI 4) gegeben",
+      "wert": "1 TL (ca. 3 ml); 1 EL (ca. 8 ml)"
+    },
+    {
+      "id": "FE-21",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck breiig",
+      "feld": "PAS breiig (schlechtester Bolus)",
+      "wert": "3 – oberhalb der Stimmlippen, wird nicht ausgestoßen"
+    },
+    {
+      "id": "FE-22",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck breiig",
+      "feld": "Zeitpunkt Penetration/Aspiration breiig",
+      "wert": "vor dem Schlucken (prädeglutitiv)"
+    },
+    {
+      "id": "FE-23",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck breiig",
+      "feld": "Yale Valleculae breiig",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-24",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck breiig",
+      "feld": "Yale Sinus piriformes breiig",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-25",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck flüssig",
+      "feld": "flüssig (IDDSI 0) gegeben",
+      "wert": "1 TL (ca. 3 ml); 1 EL (ca. 8 ml); sequenziell (Tasse/Strohhalm)"
+    },
+    {
+      "id": "FE-26",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck flüssig",
+      "feld": "PAS flüssig (schlechtester Bolus)",
+      "wert": "3 – oberhalb der Stimmlippen, wird nicht ausgestoßen"
+    },
+    {
+      "id": "FE-27",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck flüssig",
+      "feld": "Zeitpunkt Penetration/Aspiration flüssig",
+      "wert": "vor dem Schlucken (prädeglutitiv)"
+    },
+    {
+      "id": "FE-28",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck flüssig",
+      "feld": "Yale Valleculae flüssig",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-29",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck flüssig",
+      "feld": "Yale Sinus piriformes flüssig",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-30",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck fest",
+      "feld": "fest (IDDSI 7) gegeben",
+      "wert": "gegeben"
+    },
+    {
+      "id": "FE-31",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck fest",
+      "feld": "PAS fest (schlechtester Bolus)",
+      "wert": "3 – oberhalb der Stimmlippen, wird nicht ausgestoßen"
+    },
+    {
+      "id": "FE-32",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck fest",
+      "feld": "Zeitpunkt Penetration/Aspiration fest",
+      "wert": "vor dem Schlucken (prädeglutitiv)"
+    },
+    {
+      "id": "FE-33",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck fest",
+      "feld": "Yale Valleculae fest",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-34",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck fest",
+      "feld": "Yale Sinus piriformes fest",
+      "wert": "2 – Spur (1–5 %)"
+    },
+    {
+      "id": "FE-35",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluck Tablette",
+      "feld": "Placebo-Tablette gegeben",
+      "wert": "nicht gegeben"
+    },
+    {
+      "id": "FE-38",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluckuntersuchung",
+      "feld": "Leaking",
+      "wert": "flüssig"
+    },
+    {
+      "id": "FE-39",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluckuntersuchung",
+      "feld": "Reinigungsmanöver (Murray)",
+      "wert": "2 – moderat effektiv (Reinigung des Aditus, nicht des gesamten Hypopharynx)"
+    },
+    {
+      "id": "FE-40",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluckuntersuchung",
+      "feld": "Kompensation geprüft",
+      "wert": "Kinn zur Brust; supraglottisches Schlucken"
+    },
+    {
+      "id": "FE-41",
+      "abschnitt": "8 FEES",
+      "gruppe": "Schluckuntersuchung",
+      "feld": "davon wirksam",
+      "wert": "Kinn zur Brust"
+    },
+    {
+      "id": "FE-50",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ergebnis",
+      "feld": "PAS max gesamt",
+      "wert": "3"
+    },
+    {
+      "id": "FE-51",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ergebnis",
+      "feld": "FEDSS",
+      "wert": "3 – Flüssigkeit: Penetration/Aspiration mit suffizientem Schutzreflex"
+    },
+    {
+      "id": "FE-52",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ergebnis",
+      "feld": "Abklärung empfohlen",
+      "wert": "HNO / Phoniatrie"
+    },
+    {
+      "id": "FE-54",
+      "abschnitt": "8 FEES",
+      "gruppe": "Ergebnis",
+      "feld": "Ereignis / Abbruch",
+      "wert": "keines"
+    }
+  ],
+  "screening": [
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-S1",
+      "sc_datum": "2026-10-23",
+      "sc_score": null,
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-S2",
+      "sc_datum": "2026-10-23",
+      "sc_score": null,
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-S3",
+      "sc_datum": "2026-10-23",
+      "sc_score": "14",
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH",
+        "FEES"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-S4",
+      "sc_datum": "2026-10-23",
+      "sc_score": null,
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-V1",
+      "sc_datum": "2026-10-23",
+      "sc_score": "3",
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-V2",
+      "sc_datum": "2026-10-23",
+      "sc_score": "3 – Flüssigkeit: Penetration/Aspiration mit suffizientem Schutzreflex",
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    },
+    {
+      "sc_modul": "DYSPH",
+      "sc_instrument": "DYSPH-O1",
+      "sc_datum": "2026-10-23",
+      "sc_score": null,
+      "sc_einordnung": "AUFF",
+      "sc_konsequenz": [
+        "TH"
+      ]
+    }
+  ]
+}

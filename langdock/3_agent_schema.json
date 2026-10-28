@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anamnese", "befund_abschnitte", "beurteilung", "empfehlungen", "therapieziele", "weiteres_vorgehen", "arzt_rueckmeldung", "pruefhinweise"],
+  "properties": {
+    "anamnese": { "type": "string", "description": "Erhebung, Vorgeschichte, Vorbehandlung, Lebenssituation und modulspezifische Anamnese" },
+    "befund_abschnitte": {
+      "type": "array",
+      "description": "Befundabschnitte je Modul in der Reihenfolge der Anweisung; Titel genau wie vorgegeben",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titel", "text"],
+        "properties": { "titel": { "type": "string" }, "text": { "type": "string" } }
+      }
+    },
+    "beurteilung": { "type": "string", "description": "Schweregrad bzw. Einordnung je Modul wie dokumentiert; beim Zwischenbericht der Verlauf" },
+    "empfehlungen": { "type": "array", "items": { "type": "string" }, "description": "nur dokumentierte Empfehlungen" },
+    "therapieziele": { "type": "array", "items": { "type": "string" }, "description": "Teilhabeziel (SMART, wörtlich), Funktionsziel mit Zielwert, Therapieschwerpunkte" },
+    "weiteres_vorgehen": { "type": "string" },
+    "arzt_rueckmeldung": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["erforderlich", "betreff", "text"],
+      "properties": {
+        "erforderlich": { "type": "boolean" },
+        "betreff": { "type": "string" },
+        "text": { "type": "string", "description": "Brieftext ohne Anrede und Grußformel; leer, wenn nicht erforderlich" }
+      }
+    },
+    "pruefhinweise": { "type": "array", "items": { "type": "string" } }
+  }
+}

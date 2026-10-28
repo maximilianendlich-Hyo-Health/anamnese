@@ -96,7 +96,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);fon
     <div class="brand">HYO Health · Ersttermin<small id="srcNote">Anamnese &amp; spezifisches Assessment · Demo</small></div>
     <div class="dg"><label for="dgSelect">Diagnosegruppe</label><select id="dgSelect"></select></div>
     <div class="actions">
-      <button type="button" id="btnExample">Beispielfall SC</button>
+      <button type="button" id="btnExample" title="Füllt den Bogen mit Beispielwerten für die gewählte Diagnosegruppe (SC oder SP5)">Beispielfall</button>
       <button type="button" id="btnCheck">Pflichtfelder prüfen</button>
       <button type="button" id="btnSend" class="primary">An Langdock senden</button>
       <button type="button" id="btnExport">JSON exportieren</button>
@@ -111,7 +111,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);fon
 <dialog id="dlgSend" aria-labelledby="dlgSendTitle">
   <form method="dialog" class="dlg">
     <h2 id="dlgSendTitle">An Langdock senden</h2>
-    <p class="hint">Der Workflow „Ersttermin SC“ erstellt daraus Erstbefund und ggf. Arztrückmeldung. Nichts geht an tinana ohne Freigabe.</p>
+    <p class="hint">Der Workflow „Ersttermin“ erstellt daraus Erst- bzw. Zwischenbericht und ggf. Arztrückmeldung. Nichts geht an tinana ohne Freigabe.</p>
     <label for="sendPid">tinana-Patienten-ID <span class="req">*</span></label>
     <input id="sendPid" type="text" autocomplete="off" placeholder="z. B. P-10234">
     <div class="err" id="sendPidErr"></div>
@@ -124,7 +124,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);fon
 <dialog id="dlgSettings" aria-labelledby="dlgSetTitle">
   <form method="dialog" class="dlg">
     <h2 id="dlgSetTitle">Langdock-Verbindung</h2>
-    <p class="hint">Einmal pro Gerät eintragen. Werte aus dem Webhook-Trigger des Workflows („Ersttermin SC“).</p>
+    <p class="hint">Einmal pro Gerät eintragen. Werte aus dem Webhook-Trigger des Workflows („Ersttermin“).</p>
     <label for="setUrl">Webhook-URL</label>
     <input id="setUrl" type="url" placeholder="https://app.langdock.com/api/hooks/workflows/…">
     <label for="setSecret">Webhook-Secret</label>
@@ -144,9 +144,25 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--faint);fon
 <script>
 const D = /*__DATA__*/null;
 const F = D.fields, L = D.lists, byId = Object.fromEntries(F.map(f => [f.id, f]));
-const SPECIFIC = {SC: ["5 ", "6 ", "7 ", "8 "]};            // Diagnosegruppen mit spezifischem Assessment
-const DG_TO_VD = {SC:["DYSPH"], SCZ:["MFS"], OFZ:["MFS"], SP5:["APH"], SP6:["DYSAR"], ST1:["DYSPHON"], ST2:["DYSPHON"], ST3:["DYSPHON"], ST4:["DYSPHON"]};
-const AUTO_SCORE = {"DYSPH-S3":"GU-22", "DYSPH-V1":"FE-50", "DYSPH-V2":"FE-51", "TK-S1":"TB-03", "TK-S2":"TB-04", "TK-O1":"TB-07"};
+const MODS = {DYSPH: "Dysphagie", APH: "Aphasie", DYSAR: "Dysarthrie", MFS: "Myofunktion", DYSPHON: "Dysphonie"};          // Module mit spezifischem Assessment (Spalte „Modul“)
+const SPECIFIC = {SC: "DYSPH", SP5: "APH", SP6: "DYSAR", SCZ: "MFS", OFZ: "MFS", SPZ: "MFS", ST1: "DYSPHON", ST2: "DYSPHON", ST3: "DYSPHON", ST4: "DYSPHON"};                  // Diagnosegruppe → Modul
+const DEFAULTS = {"VO-25": "ERST"};
+const ROW_IF = {"APH-S2": e => !e["AL-01"] || e["AL-01"] === "CPIB", "APH-S3": e => !e["AL-01"] || e["AL-01"] === "CETI",
+  "APH-S4": e => !empty(e["AL-05"]), "APH-O1": e => e["VO-25"] === "VERLAUF",
+  "DYSAR-S2": e => e["VT-02"] === "DURCHF", "DYSAR-S4": e => e["VT-04"] === "DURCHF", "DYSAR-O1": e => e["VO-25"] === "VERLAUF",
+  "MFS-O1": e => e["VO-25"] === "VERLAUF",
+  "DYSPHON-S3": e => e["PB-15"] !== "NEIN", "DYSPHON-S4": e => e["PB-07"] === "DURCHF", "DYSPHON-O1": e => e["VO-25"] === "VERLAUF"};
+const DG_TO_VD = {SC:["DYSPH"], SCZ:["MFS"], OFZ:["MFS"], SPZ:["MFS"], SP5:["APH"], SP6:["DYSAR"], ST1:["DYSPHON"], ST2:["DYSPHON"], ST3:["DYSPHON"], ST4:["DYSPHON"]};
+const AUTO_SCORE = {"DYSPH-S3":"GU-22", "DYSPH-V1":"FE-50", "DYSPH-V2":"FE-51", "TK-S1":"TB-03", "TK-S2":"TB-04", "TK-O1":"TB-07",
+  "APH-S1":"BI-19", "APH-S2":"AL-02", "APH-S3":"AL-03", "APH-S4":"AL-05", "APH-O1":"AZ-01",
+  "DYSAR-S1":"BD-17", "DYSAR-S2":"VT-03", "DYSAR-S3":"VT-11", "DYSAR-S4":"VT-06", "DYSAR-O1":"DZ-02",
+  "MFS-S1":"MB-14", "MFS-O1":"MZ-02",
+  "DYSPHON-S1": e => ["PB-04","PB-05","PB-06"].every(id => !empty(e[id])) ? `R${e["PB-04"]} B${e["PB-05"]} H${e["PB-06"]}` : null,
+  "DYSPHON-S2": e => empty(e["PB-10"]) ? null : `${e["PB-10"]} s` + (empty(e["PB-11"]) ? "" : ` · s/z ${e["PB-11"]}`),
+  "DYSPHON-S3":"PB-16",
+  "DYSPHON-S4": e => empty(e["PB-08"]) ? null : `AVQI ${e["PB-08"]}` + (empty(e["PB-09"]) ? "" : ` · ABI ${e["PB-09"]}`),
+  "DYSPHON-O1":"PZ-02"};
+const skey = f => (f.mod || "") + "|" + f.sec;
 const GRADE_TO_KOST = {KEINE:["7","0"], LEICHT:["6","0"], MITTEL:["4","1"], SCHWER:["NPO","NPO"]};
 const GUSS_ROW = {KEINE:"20", LEICHT:"15–19", MITTEL:"10–14", SCHWER:"0–9"};
 const isScreen = f => f.sec.startsWith("4 ");
@@ -160,14 +176,15 @@ const h = (tag, attrs={}, ...kids) => { const e = document.createElement(tag);
     if (k === "class") e.className = v; else if (k === "text") e.textContent = v; else e.setAttribute(k, v === true ? "" : v); }
   kids.flat().forEach(k => k != null && e.append(k)); return e; };
 const toast = msg => { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), 2600); };
-const slug = s => "s" + s.split(" ")[0];
+const SECID = {};
+const slug = s => SECID[s];
 
 /* ---------- Logik ---------- */
 function activeInstruments(eff, vis) {
   const codes = vis["MV-06"] && Array.isArray(eff["MV-06"]) ? eff["MV-06"] : [];
   const mods = new Set(codes);
   if (mods.has("DYSPH") && vis["DA-08"] && eff["DA-08"] === "JA") mods.add("DYSPH-TK");
-  return D.modules.filter(m => mods.has(m.mod));
+  return D.modules.filter(m => mods.has(m.mod) && (!ROW_IF[m.iid] || ROW_IF[m.iid](eff)));
 }
 function scUnion(eff, vis) {
   const s = new Set(); activeInstruments(eff, vis).forEach(m => (scr[m.iid]?.kons || []).forEach(k => s.add(k))); return [...s];
@@ -182,6 +199,14 @@ function atom(a, eff, vis) {
     case "le": return num(v) !== null && num(v) <= +a.v;
     case "shown": return !!vis[a.f];
     case "filled": return !empty(v);
+    case "isempty": return empty(v);
+    case "in": return Array.isArray(v) ? v.some(x => a.v.includes(String(x))) : (!empty(v) && a.v.includes(String(v)));
+    case "age_lt": case "age_ge": {
+      const g = eff["VO-02"]; if (empty(g) || !/^\d{4}-\d{2}-\d{2}/.test(g)) return false;
+      const ref = /^\d{4}-\d{2}-\d{2}/.test(eff["VO-23"] || "") ? eff["VO-23"] : new Date().toISOString().slice(0, 10);
+      let age = +ref.slice(0, 4) - +g.slice(0, 4); if (ref.slice(5, 10) < g.slice(5, 10)) age--;
+      return a.op === "age_lt" ? age < a.v : age >= a.v;
+    }
   }
   return false;
 }
@@ -197,6 +222,8 @@ function calc(id, eff, vis) {
     case "GU-16": return sumOf(range(12,15), eff, vis);
     case "GU-21": return sumOf(range(17,20), eff, vis);
     case "GU-22": { let t = 0; for (const p of ["GU-06","GU-11","GU-16","GU-21"]) { if (!vis[p]) continue; if (eff[p] == null) return null; t += eff[p]; } return vis["GU-06"] ? t : null; }
+    case "MB-14": return kernwert(["MB-02","MB-03","MB-05","MB-06","MB-07","MB-09"], habitBefund(eff), eff);
+    case "MZ-11": return kernwert(["MZ-04","MZ-05","MZ-06","MZ-07","MZ-08","MZ-09"], HAB_P[eff["MZ-10"]] ?? null, eff);
     case "FE-50": { const v = ["FE-21","FE-26","FE-31","FE-36"].filter(id => vis[id]).map(id => num(eff[id])).filter(x => x !== null); return v.length ? Math.max(...v) : null; }
     case "GU-23": { const g = eff["GU-22"]; if (g == null) return null; return g === 20 ? "KEINE" : g >= 15 ? "LEICHT" : g >= 10 ? "MITTEL" : "SCHWER"; }
   }
@@ -206,7 +233,8 @@ function pass() {
   const vis = {}, eff = {};
   for (const f of F) {
     if (isScreen(f)) { vis[f.id] = false; continue; }
-    vis[f.id] = evalCond(f.cond, eff, vis);
+    const modOn = !f.mod || (vis["MV-06"] && Array.isArray(eff["MV-06"]) && eff["MV-06"].includes(f.mod));
+    vis[f.id] = modOn && evalCond(f.cond, eff, vis);
     if (f.src.startsWith("aus ")) eff[f.id] = eff[f.src.slice(4)];
     else if (f.src === "berechnet") eff[f.id] = calc(f.id, eff, vis);
     else eff[f.id] = state[f.id];
@@ -227,7 +255,64 @@ function allowed(id, eff) {
   if (id === "FE-05") return c => c !== "TRANSST" || eff["DA-08"] === "JA";
   return null;
 }
-const PREFILLED = ["BE-01", "BE-02", "FE-07", "FE-52", "FE-05", "FE-40", "FE-41"];
+const PREFILLED = ["BE-01", "BE-02", "FE-07", "FE-52", "FE-05", "FE-40", "FE-41", "MB-13", "ME-12", "ME-02", "PB-17", "PE-11", "PE-02", "PB-07"];
+// Dysphonie: Einordnung PB-17 aus dem ärztlichen Befund DP-03 (nur bei DP-01 = JA), Empfehlungen PE-11, Indikation PE-02
+const ORG_CODES = ["KNOET","POLYP","ZYSTE","REINKE","GRANULOM","SULCUS","LEUKO","PARESE","TUMOR","SCHLUSS","ENTZ"];
+function dphVorschlag(eff) {
+  const d3 = Array.isArray(eff["DP-03"]) ? eff["DP-03"] : [];
+  let einord = null;
+  if (eff["DP-01"] === "JA" && d3.length && !d3.includes("SONST")) {
+    const org = d3.some(c => ORG_CODES.includes(c)), tf = d3.includes("TASCHENF");
+    if (!org && d3.every(c => c === "OB" || c === "TASCHENF")) einord = "FUNKT";
+    else if (org && tf) einord = "ORG_FUNKT";
+    else if (org) einord = "ORG";
+  }
+  const e = touched.has("PB-17") ? eff["PB-17"] : (einord || eff["PB-17"]), dg = eff["VO-15"];
+  const soll = {ORG: "ST1", ORG_FUNKT: "ST1", FUNKT: "ST2", PSY_APH: "ST3", PSY_DYS: "ST4", DYSAR: "SP6"}[e];
+  const mismatch = !!soll && !empty(dg) && dg !== soll;
+  const k10 = Array.isArray(eff["DP-10"]) ? eff["DP-10"] : [];
+  const warn = Array.isArray(eff["DP-05"]) && eff["DP-05"].some(c => c !== "KEINE");
+  const empf = [];
+  if (eff["DP-01"] === "NEIN" || eff["DP-01"] === "ANGEF") empf.push("HNO");
+  if (mismatch) empf.push("DG");
+  if (k10.includes("REFLUX")) empf.push("REFLUX");
+  if (k10.includes("SCHLUCK")) empf.push("KSU");
+  return {einord, mismatch, empf, warn};
+}
+// Myofunktions-Kernwert 0–14 (Legende „Kernwert“): 7 Merkmale je 0–2; fehlt eins → kein Wert
+const LIP_P = {KOMP: 0, ANGESTR: 1, WECHSELND: 1, INKOMP: 2, UNTERLIPPE: 2};
+const ZUN_P = {PHYS: 0, MUNDBODEN: 1, ADDENT: 2, INTERDENT: 2, LATERAL: 2};
+const NAS_P = {OB: 0, ERSCHW: 1, NICHT: 2};
+const HAB_P = {KEINE: 0, SELTEN: 1, NACHTS: 1, TAEGL: 2, DAUER: 2};
+const multiP = (v, ok, worst) => { if (!Array.isArray(v) || !v.length) return null; const other = v.filter(c => c !== ok); if (!other.length) return 0; if (worst && v.includes(worst)) return 2; return other.length === 1 ? 1 : 2; };
+function habitBefund(eff) { const h8 = eff["MA-08"]; if (!Array.isArray(h8) || !h8.length) return null; if (h8.includes("KEINE")) return 0; return HAB_P[eff["MA-09"]] ?? null; }
+function kernwert([lip, zun, nas, sfl, sfe, kau], hab, eff) {
+  const parts = [LIP_P[eff[lip]], ZUN_P[eff[zun]], NAS_P[eff[nas]], multiP(eff[sfl], "PHYS"), multiP(eff[sfe], "PHYS"), multiP(eff[kau], "OB", "VERMEID"), hab];
+  return parts.some(x => x === undefined || x === null) ? null : parts.reduce((a, b) => a + b, 0);
+}
+// Myofunktion: Einordnung (MB-13), Empfehlungen (ME-12), Indikation (ME-02) – Vorschläge, solange nicht von Hand geändert
+function mfsVorschlag(eff) {
+  const has = (id, c) => Array.isArray(eff[id]) && eff[id].includes(c);
+  const warn = Array.isArray(eff["MA-13"]) && eff["MA-13"].some(c => c !== "KEINE");
+  const need = ["MB-02","MB-03","MB-05","MB-06","MB-07","MB-12","MA-13"];
+  let einord = null;
+  if (need.every(id => !empty(eff[id]))) {
+    if (warn || eff["MB-05"] === "NICHT") einord = "ABKL";
+    else if (eff["MB-12"].some(c => c !== "OB")) einord = "MIT_ARTIK";
+    else if ((eff["MB-06"].some(c => c !== "PHYS") || eff["MB-07"].some(c => c !== "PHYS")) && eff["MB-02"] === "KOMP" && eff["MB-03"] === "PHYS") einord = "SCHLUCK";
+    else einord = "OFZ_ISOL";
+  }
+  const e = (touched.has("MB-13") ? eff["MB-13"] : einord || eff["MB-13"]), dg = eff["VO-15"];
+  const mismatch = (e === "OFZ_ISOL" && dg !== "OFZ") || (e === "MIT_ARTIK" && dg !== "SPZ") || (e === "SCHLUCK" && dg !== "SCZ");
+  const nase = eff["MB-05"] === "NICHT" || eff["MB-05"] === "ERSCHW";
+  const empf = [];
+  if (["GEPLANT","LOSE","FEST","ALIGNER"].includes(eff["MA-03"])) empf.push("KFO");
+  if (nase || (eff["MA-07"] === "NICHT" && has("MA-06", "NASE_ZU"))) empf.push("HNO");
+  if (eff["MB-11"] === "VERD") empf.push("ZA");
+  if (has("MA-13", "ATEMPAUSE")) empf.push("SCHLAF");
+  if (mismatch && !empty(dg)) empf.push("DG");
+  return {einord, mismatch: mismatch && !empty(dg), nase, empf, abkl: warn || eff["MB-05"] === "NICHT"};
+}
 function compute() {
   let r = pass(), changed = false;
   const sg = suggestion(r.eff, r.vis);
@@ -235,6 +320,19 @@ function compute() {
   if (!touched.has("FE-07") && r.vis["FE-07"] && empty(state["FE-07"]) && !empty(r.eff["MV-20"])) { state["FE-07"] = String(r.eff["MV-20"]); changed = true; }
   const st = r.eff["FE-14"];
   if (!touched.has("FE-52") && r.vis["FE-52"] && empty(state["FE-52"]) && Array.isArray(st) && st.length && !st.includes("UNAUF")) { state["FE-52"] = ["HNO"]; changed = true; }
+  if (r.vis["PB-17"]) {
+    const dv = dphVorschlag(r.eff);
+    if (!touched.has("PB-17") && dv.einord && state["PB-17"] !== dv.einord) { state["PB-17"] = dv.einord; changed = true; }
+    if (!touched.has("PE-11") && JSON.stringify(state["PE-11"] || []) !== JSON.stringify(dv.empf)) { state["PE-11"] = dv.empf.length ? dv.empf : undefined; changed = true; }
+    if (!touched.has("PE-02") && dv.warn && state["PE-02"] !== "ABKL") { state["PE-02"] = "ABKL"; changed = true; }
+    if (!touched.has("PB-07") && r.eff["MV-49"] === "NEIN" && state["PB-07"] !== "KEINE_EINW") { state["PB-07"] = "KEINE_EINW"; changed = true; }
+  }
+  if (r.vis["MB-13"]) {
+    const mv = mfsVorschlag(r.eff);
+    if (!touched.has("MB-13") && mv.einord && state["MB-13"] !== mv.einord) { state["MB-13"] = mv.einord; changed = true; }
+    if (!touched.has("ME-12") && JSON.stringify(state["ME-12"] || []) !== JSON.stringify(mv.empf)) { state["ME-12"] = mv.empf.length ? mv.empf : undefined; changed = true; }
+    if (!touched.has("ME-02") && mv.abkl && state["ME-02"] !== "ABKL") { state["ME-02"] = "ABKL"; changed = true; }
+  }
   for (const id of ["FE-05", "FE-40", "FE-41"]) { const ok = allowed(id, r.eff); if (ok && Array.isArray(state[id]) && state[id].some(c => !ok(c))) { state[id] = state[id].filter(ok); changed = true; } }
   if (changed) r = pass();
   r.sg = suggestion(r.eff, r.vis);
@@ -245,6 +343,13 @@ function fieldError(f, v) {
   const re = /Regex (\^\S*?\$)/.exec(f.fmt);
   if (re) { try { const rx = new RegExp(re[1]), parts = /mit ; trennen/.test(f.fmt) ? String(v).split(/\s*;\s*/) : [String(v)];
     if (!parts.every(p => rx.test(p))) return "Format passt nicht (" + re[1] + ")"; } catch (e) {} }
+  if (f.type === "date" && /Monat\/Jahr/.test(f.fmt) && !/^\d{4}-\d{2}(-\d{2})?$/.test(String(v))) return "Format JJJJ-MM oder JJJJ-MM-TT";
+  if (f.type === "decimal") {
+    const d = String(v).replace(",", ".");
+    if (!/^-?\d+(\.\d)?$/.test(d)) return "Zahl mit höchstens einer Nachkommastelle";
+    const m = /(\d+(?:[.,]\d+)?)\s*–\s*(\d+(?:[.,]\d+)?)/.exec(f.fmt);
+    if (m && (+d < +m[1].replace(",", ".") || +d > +m[2].replace(",", "."))) return `Erlaubt: ${m[1]}–${m[2]}`;
+  }
   if (f.type === "integer" && f.src !== "berechnet") {
     if (!/^-?\d+$/.test(String(v))) return "Ganze Zahl erwartet";
     const m = /(\d+)\s*–\s*(\d+)/.exec(f.fmt); if (m && (+v < +m[1] || +v > +m[2])) return `Erlaubt: ${m[1]}–${m[2]}`;
@@ -270,33 +375,37 @@ function control(f) {
     return h("select", {name, "data-id":f.id, "aria-label":f.label}, h("option", {value:"", text:"– bitte wählen –"}), opts.map(o => h("option", {value:o.c, text:`${o.l}`})));
   }
   if (f.type === "text") return h("textarea", {name, "data-id":f.id, "aria-label":f.label, placeholder:f.ex || null, maxlength:(/max\. (\d+)/.exec(f.fmt)||[])[1] || null});
-  const type = f.type === "date" ? "date" : f.type === "integer" ? "number" : /E-Mail/.test(f.fmt) ? "email" : /E\.164/.test(f.fmt) ? "tel" : "text";
-  return h("input", {type, name, "data-id":f.id, "aria-label":f.label, placeholder: type === "date" ? null : (f.ex || null), inputmode: type === "number" ? "numeric" : null});
+  const type = f.type === "date" && !/Monat\/Jahr/.test(f.fmt) ? "date" : f.type === "integer" ? "number" : /E-Mail/.test(f.fmt) ? "email" : /E\.164/.test(f.fmt) ? "tel" : "text";
+  return h("input", {type, name, "data-id":f.id, "aria-label":f.label, placeholder: type === "date" ? null : (f.ex || null), inputmode: type === "number" ? "numeric" : f.type === "decimal" ? "decimal" : null});
 }
 function build() {
   const main = $("#main"), nav = $("#nav");
-  const secs = [...new Set(F.map(f => f.sec))];
-  for (const sec of secs) {
-    const sid = slug(sec), list = F.filter(f => f.sec === sec);
-    const specific = Object.entries(SPECIFIC).find(([, pre]) => pre.some(p => sec.startsWith(p)));
-    const s = h("section", {id:sid, "data-sec":sec}, h("h2", {}, sec.replace(/^(\d+) /, "$1 · "), specific ? h("span", {class:"tag", text:"Assessment " + specific[0]}) : null));
+  const keys = [...new Set(F.map(skey))];
+  keys.forEach((k, i) => SECID[k] = "sec" + i);
+  for (const key of keys) {
+    const sid = slug(key), list = F.filter(f => skey(f) === key), mod = list[0].mod, sec = list[0].sec;
+    const s = h("section", {id:sid, "data-sec":key, "data-name":sec, "data-mod":mod || null}, h("h2", {}, sec.replace(/^(\d+) /, "$1 · "), mod ? h("span", {class:"tag", text:"Assessment " + (MODS[mod] || mod)}) : null));
     if (isScreen(list[0])) { s.append(h("div", {class:"scr", id:"scrBox"})); }
     else {
       let grpEl = null, grp = null;
       for (const f of list) {
-        if (f.grp !== grp) { grp = f.grp; grpEl = h("div", {class:"grp", "data-grp":sec + "|" + grp}, h("h3", {text:grp})); s.append(grpEl); }
+        if (f.grp !== grp) { grp = f.grp; grpEl = h("div", {class:"grp", "data-grp":key + "|" + grp}, h("h3", {text:grp})); s.append(grpEl); }
         const req = needed(f) ? h("span", {class:"req", title: f.req === "bedingt" ? "Pflicht, wenn angezeigt" : "Pflichtfeld", text:"*"}) : null;
         const meta = h("div", {class:"meta"}, h("span", {class:"id", title:f.key, text:f.id}),
           f.cond && f.condText ? h("span", {class:"cond", title:"Wird angezeigt, wenn: " + f.condText, text:"wenn " + f.condText}) : null,
           f.scope === "nur TK" ? h("span", {class:"tkb", text:"nur TK"}) : null);
         const lblId = "l_" + f.id;
         const right = h("div", {}, control(f), f.hint ? h("div", {class:"hint", text:f.hint}) : null, h("div", {class:"err", "data-err":f.id}),
-          (f.id === "BE-01") ? h("div", {class:"suggest", id:"gussSuggest", hidden:true}) : null);
+          (f.id === "BE-01") ? h("div", {class:"suggest", id:"gussSuggest", hidden:true}) : null,
+          (f.id === "AA-08") ? h("div", {class:"suggest", id:"aa08Hint", hidden:true}) : null,
+          (f.id === "MB-13") ? h("div", {class:"suggest", id:"mb13Hint", hidden:true}) : null,
+          (f.id === "PB-17") ? h("div", {class:"suggest", id:"pb17Hint", hidden:true}) : null,
+          (f.id === "PZ-10") ? h("div", {class:"suggest", id:"pz10Hint", hidden:true}) : null);
         grpEl.append(h("div", {class:"row" + (f.scope === "nur TK" ? " tk" : ""), "data-row":f.id}, h("div", {class:"lbl", id:lblId}, f.label, req, meta), right));
       }
     }
     main.append(s);
-    nav.append(h("a", {href:"#" + sid, "data-nav":sec}, h("span", {text:sec.replace(/^(\d+) /, "$1  ")}), h("span", {class:"cnt", "data-cnt":sec})));
+    nav.append(h("a", {href:"#" + sid, "data-nav":key}, h("span", {text:(mod ? (MODS[mod] || mod) + " · " : "") + sec.replace(/^(\d+) /, "$1  ")}), h("span", {class:"cnt", "data-cnt":key})));
   }
   nav.append(h("div", {class:"navnote", text:"* Pflichtfeld · gelbe Hinweise zeigen die Anzeige-Bedingung"}));
   const dg = $("#dgSelect"); dg.append(h("option", {value:"", text:"– Diagnosegruppe wählen –"}));
@@ -331,18 +440,18 @@ function update() {
     if (ok) row.querySelectorAll("label.chip").forEach(l => l.hidden = !ok(l.querySelector("input").value));
     if (!vis[f.id]) { row.classList.remove("missing"); continue; }
     const err = fieldError(f, eff[f.id]); $(`[data-err="${f.id}"]`).textContent = err;
-    if (err) errors[f.sec] = (errors[f.sec] || 0) + 1;
+    if (err) errors[skey(f)] = (errors[skey(f)] || 0) + 1;
     const miss = needed(f) && empty(eff[f.id]);
-    if (miss) missing[f.sec] = (missing[f.sec] || 0) + 1;
+    if (miss) missing[skey(f)] = (missing[skey(f)] || 0) + 1;
     row.classList.toggle("missing", checked && miss);
   }
   document.querySelectorAll("[data-grp]").forEach(g => g.hidden = ![...g.querySelectorAll("[data-row]")].some(r => !r.hidden));
   const instruments = activeInstruments(eff, vis);
   document.querySelectorAll("section[data-sec]").forEach(s => {
-    const sec = s.dataset.sec;
-    const show = sec.startsWith("4 ") ? instruments.length > 0 : [...s.querySelectorAll("[data-row]")].some(r => !r.hidden);
+    const sec = s.dataset.sec, isScr = s.dataset.name.startsWith("4 ");
+    const show = isScr ? instruments.length > 0 : [...s.querySelectorAll("[data-row]")].some(r => !r.hidden);
     s.hidden = !show; $(`[data-nav="${sec}"]`).classList.toggle("hidden", !show);
-    if (sec.startsWith("4 ")) { instruments.forEach(m => { if (!(scr[m.iid]?.ein)) missing[sec] = (missing[sec] || 0) + 1; }); }
+    if (isScr) { instruments.forEach(m => { if (!(scr[m.iid]?.ein)) missing[sec] = (missing[sec] || 0) + 1; }); }
     const c = $(`[data-cnt="${sec}"]`), n = missing[sec] || 0, e = errors[sec] || 0;
     c.textContent = n || e ? `${n ? n + " offen" : ""}${n && e ? " · " : ""}${e ? e + " Fehler" : ""}` : "✓";
     c.className = "cnt " + (n || e ? "open" : "done");
@@ -350,6 +459,32 @@ function update() {
   renderScreening(instruments, eff);
   renderSuggest(eff, vis, cur.sg);
   renderBanner(eff);
+  const ph = $("#pb17Hint");
+  if (ph) {
+    const dv = vis["PB-17"] ? dphVorschlag(eff) : null, t = [];
+    if (dv && dv.einord && eff["PB-17"] !== dv.einord) t.push(`Vorschlag aus dem ärztlichen Befund: ${labelFor(byId["PB-17"], dv.einord)}.`);
+    if (dv && dv.mismatch) t.push("Diagnosegruppe passt nicht zum Befund – Rücksprache mit der verordnenden Ärzt:in; in PE-11 ‚Diagnosegruppe prüfen‘ markieren.");
+    if (dv && dv.warn) t.push("Warnzeichen (DP-05): erst ärztliche Abklärung, Vorgehen nach SOP 6.1.");
+    ph.hidden = !t.length; ph.textContent = t.join(" ");
+  }
+  const zh = $("#pz10Hint");
+  if (zh) { const show = vis["PZ-10"] && eff["DP-01"] !== "JA"; zh.hidden = !show;
+    zh.textContent = "Ärztlicher Kehlkopfbefund (DP-01) liegt noch nicht vor – ohne Befund keine Folgeverordnung (SOP 5.2)."; }
+  const mh = $("#mb13Hint");
+  if (mh) {
+    const mv = vis["MB-13"] ? mfsVorschlag(eff) : null, t = [];
+    if (mv && mv.einord && eff["MB-13"] !== mv.einord) t.push(`Vorschlag nach Befund: ${labelFor(byId["MB-13"], mv.einord)}.`);
+    if (mv && mv.mismatch) t.push("Diagnosegruppe passt nicht zum Befund – Rücksprache mit der verordnenden Zahnärzt:in bzw. Ärzt:in; in ME-12 ‚Diagnosegruppe prüfen‘ markieren.");
+    if (mv && mv.nase) t.push("Nasenatmung erschwert/nicht möglich: HNO-Abklärung anregen, keine Mundschluss- oder Nasenatmungsübungen.");
+    mh.hidden = !t.length; mh.textContent = t.join(" ");
+  }
+  const ah = $("#aa08Hint");
+  if (ah) {
+    const map = {SPAX: "SPAX", DYSAR: "DYSAR", DYSPH: "DYSPH", KOGN: "KKS"}, vd = Array.isArray(eff["MV-06"]) ? eff["MV-06"] : [];
+    const miss = (Array.isArray(eff["AA-08"]) ? eff["AA-08"] : []).map(c => map[c]).filter(c => c && !vd.includes(c));
+    ah.hidden = !(vis["AA-08"] && miss.length);
+    ah.textContent = `Nicht in der Verdachtsdiagnose (MV-06): ${miss.map(c => L.L_VD.find(o => o.c === c)?.l || c).join(", ")}. Dort ergänzen, damit das passende Screening erscheint.`;
+  }
   return {missing, errors};
 }
 function renderSuggest(eff, vis, sg) {
@@ -366,15 +501,18 @@ function renderSuggest(eff, vis, sg) {
 }
 function renderBanner(eff) {
   const b = $("#dgBanner"), dg = eff["VO-15"];
-  if (!dg) { b.className = "banner neutral"; b.textContent = "Diagnosegruppe oben wählen. Für SC (Kau- und Schluckstörungen) wird das spezifische Dysphagie-Assessment mit KSU, GUSS und Kostform-Empfehlung eingeblendet."; return; }
+  if (!dg) { b.className = "banner neutral"; b.textContent = "Diagnosegruppe oben wählen. Für SC (Kau- und Schluckstörungen) erscheint das Dysphagie-Assessment, für SP5 das Aphasie-Assessment."; return; }
   const lbl = L.L_DG.find(o => o.c === dg)?.l || dg;
-  b.className = "banner"; b.textContent = SPECIFIC[dg]
-    ? `${dg} · ${lbl}: Basisanamnese (1–4) plus spezifisches Assessment (Blöcke 5–7). Felder erscheinen je nach Angaben, z. B. Trachealkanülen-Befund nur bei Kanüle, GUSS-Teile nur bis zum Abbruch.`
-    : `${dg} · ${lbl}: Basisanamnese und Screening sind verfügbar. Ein spezifisches Assessment ist in dieser Demo nur für SC hinterlegt.`;
+  const mods = [...new Set((Array.isArray(eff["MV-06"]) ? eff["MV-06"] : []).filter(c => MODS[c]))].map(c => MODS[c]);
+  b.className = "banner"; b.textContent = mods.length
+    ? `${dg} · ${lbl}: Basisanamnese (1–4) plus spezifisches Assessment ${mods.join(" und ")}. Felder erscheinen je nach Angaben; weitere Module über die Verdachtsdiagnose (MV-06).`
+    : `${dg} · ${lbl}: Basisanamnese und Screening sind verfügbar. Spezifische Assessments gibt es bisher für SC (Dysphagie) und SP5 (Aphasie).`;
 }
 function renderScreening(instruments, eff) {
   const box = $("#scrBox"); if (!box) return;
-  instruments.forEach(m => { const src = AUTO_SCORE[m.iid]; if (src) { scr[m.iid] = scr[m.iid] || {}; scr[m.iid].score = eff[src] == null ? (scr[m.iid].manual ? scr[m.iid].score : "") : String(eff[src]); scr[m.iid].auto = eff[src] != null; } });
+  instruments.forEach(m => { const src = AUTO_SCORE[m.iid]; if (!src) return; const s = scr[m.iid] = scr[m.iid] || {};
+    const val = typeof src === "function" ? src(eff) : (empty(eff[src]) ? null : String(labelFor(byId[src], eff[src])));
+    s.score = val == null ? (s.manual ? s.score : "") : val; s.auto = val != null; });
   const sig = instruments.map(m => m.iid + ":" + (scr[m.iid]?.auto ? scr[m.iid].score : "")).join("|");
   if (sig === scrSig) return; scrSig = sig; box.replaceChildren();
   if (!instruments.length) { box.append(h("div", {class:"empty", text:"Kein Modul aktiv – Verdachtsdiagnose in MV-06 wählen."})); return; }
@@ -385,7 +523,7 @@ function renderScreening(instruments, eff) {
     const checks = L.L_KONSEQ.map(o => h("label", {class:"chip"}, h("input", {type:"checkbox", value:o.c, "data-scr":m.iid, "data-k":"kons", checked: (s.kons || []).includes(o.c)}), h("span", {text:o.l})));
     tb.append(h("tr", {},
       h("td", {}, h("div", {text:m.name}), h("div", {class:"meta"}, h("span", {class:"id", text:m.iid}), h("span", {class:"stage", text:m.stage}), m.mod === "DYSPH-TK" ? h("span", {class:"tkb", text:"nur TK"}) : null)),
-      h("td", {}, s.auto ? h("div", {class:"calc", text:s.score}, h("small", {text:" aus " + AUTO_SCORE[m.iid]})) : h("input", {type:"text", value:s.score || "", "data-scr":m.iid, "data-k":"score", placeholder:m.fmt || "Score", "aria-label":"Score " + m.name})),
+      h("td", {}, s.auto ? h("div", {class:"calc", text:s.score}, h("small", {text: typeof AUTO_SCORE[m.iid] === "function" ? " automatisch" : " aus " + AUTO_SCORE[m.iid]})) : h("input", {type:"text", value:s.score || "", "data-scr":m.iid, "data-k":"score", placeholder:m.fmt || "Score", "aria-label":"Score " + m.name})),
       h("td", {}, h("div", {class:"chips"}, radios)),
       h("td", {}, h("div", {class:"chips"}, checks))));
   }
@@ -406,7 +544,7 @@ function applyDG(dg) {
 }
 document.addEventListener("change", e => {
   const el = e.target;
-  if (el.id === "dgSelect") { applyDG(el.value); update(); if (SPECIFIC[el.value]) document.getElementById("s5")?.scrollIntoView({behavior:"smooth"}); return; }
+  if (el.id === "dgSelect") { applyDG(el.value); update(); if (SPECIFIC[el.value]) document.querySelector(`section[data-mod="${SPECIFIC[el.value]}"]`)?.scrollIntoView({behavior:"smooth"}); return; }
   if (el.dataset.scr) {
     const s = scr[el.dataset.scr] = scr[el.dataset.scr] || {};
     if (el.dataset.k === "ein") s.ein = el.value;
@@ -443,7 +581,7 @@ function buildPayload(opts = {}) {
   F.forEach(f => {
     if (isScreen(f) || !vis[f.id] || empty(eff[f.id])) return;
     if (opts.ohneStammdaten && STAMMDATEN.includes(f.id)) return;
-    const v = eff[f.id]; felder[f.key] = v;
+    const v = f.type === "decimal" ? Number(String(eff[f.id]).replace(",", ".")) : eff[f.id]; felder[f.key] = v;
     lesbar.push({id: f.id, abschnitt: f.sec, gruppe: f.grp, feld: f.label, wert: String(Array.isArray(v) ? v.map(x => labelFor(f, x)).join("; ") : labelFor(f, v))});
   });
   const screening = activeInstruments(eff, vis).map(m => ({sc_modul:m.mod, sc_instrument:m.iid, sc_datum: eff["VO-23"] || null, sc_score: scr[m.iid]?.score || null, sc_einordnung: scr[m.iid]?.ein || null, sc_konsequenz: scr[m.iid]?.kons || []}));
@@ -514,9 +652,11 @@ $("#fileImport").onchange = async e => {
   for (const [k, v] of Object.entries(felder)) { const f = byKey[k]; if (!f || f.src === "berechnet" || f.src.startsWith("aus ")) continue; state[f.id] = v; touched.add(f.id); n++; }
   (p.screening || []).forEach(s => { scr[s.sc_instrument] = {score: s.sc_score || "", ein: s.sc_einordnung || undefined, kons: s.sc_konsequenz || [], manual: !!s.sc_score}; });
   F.forEach(f => syncControl(f.id)); update();
-  toast(`${n} Felder geladen. Für eine spätere FEES: Ausgangslage (DA-08, DA-10–15) prüfen und Block 8 ausfüllen.`);
+  if (empty(state["VO-25"])) state["VO-25"] = DEFAULTS["VO-25"];
+  F.forEach(f => syncControl(f.id)); update();
+  toast(`${n} Felder geladen. Für Folgetermine (FEES, Zwischenbewertung): Terminart (VO-25) und Ausgangslage prüfen.`);
 };
-function resetForm() { state = {}; scr = {}; touched = new Set(); checked = false; scrSig = ""; F.forEach(f => syncControl(f.id)); update(); window.scrollTo({top:0}); }
+function resetForm() { state = {...DEFAULTS}; scr = {}; touched = new Set(); checked = false; scrSig = ""; F.forEach(f => syncControl(f.id)); update(); window.scrollTo({top:0}); }
 $("#btnReset").onclick = () => { if (confirm("Alle Eingaben verwerfen?")) resetForm(); };
 $("#btnExample").onclick = () => {
   state = {}; scr = {}; touched = new Set(); scrSig = "";
@@ -526,13 +666,14 @@ $("#btnExample").onclick = () => {
     const ex = override[f.id] ?? f.ex; if (empty(ex)) continue;
     state[f.id] = isMulti(f) ? ex.split(/\s*;\s*/) : ex;
   }
-  state["VO-15"] = "SC"; state["MV-06"] = ["DYSPH"]; state["MV-27"] = "KORREKT"; state["MV-32"] = "nein";
+  const sel = $("#dgSelect").value, dg = SPECIFIC[sel] ? sel : "SC";
+  state["VO-15"] = dg; state["MV-06"] = [SPECIFIC[dg]]; state["MV-27"] = "KORREKT"; state["MV-32"] = "nein"; state["VO-25"] = "ERST";
   F.forEach(f => syncControl(f.id)); update();
   activeInstruments(cur.eff, cur.vis).forEach(m => { scr[m.iid] = {...(scr[m.iid] || {}), ein:"AUFF", kons: m.iid === "DYSPH-S3" ? ["TH","FEES"] : ["TH"]}; });
-  scrSig = ""; update(); toast("Beispielfall SC geladen (Werte aus der Spalte Beispielwert)");
+  scrSig = ""; update(); toast(`Beispielfall ${dg} geladen (Werte aus der Spalte Beispielwert)`);
 };
 
-build(); update();
+build(); state = {...DEFAULTS}; F.forEach(f => syncControl(f.id)); update();
 </script>
 </body>
 </html>

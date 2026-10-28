@@ -27,12 +27,21 @@ def parse_atom(text):
     t = text.strip()
     m = re.fullmatch(rf"({ID}) enthält (.+)", t)
     if m:
-        vals = [v.strip() for v in re.split(r"\s+oder\s+", m.group(2))]
+        vals = [v.strip() for v in re.split(r"\s*,\s*|\s+oder\s+", m.group(2)) if v.strip()]
         return {"op": "has", "f": m.group(1), "v": vals}
+    m = re.fullmatch(rf"({ID}) ∈ (.+)", t)
+    if m:
+        return {"op": "in", "f": m.group(1), "v": [v.strip() for v in re.split(r"\s*,\s*|\s+oder\s+", m.group(2)) if v.strip()]}
+    m = re.fullmatch(r"Alter (<|≥) (\d+)", t)
+    if m:  # Alter in Jahren aus VO-02 (Geburtsdatum) und VO-23 (Aufnahmedatum, sonst heute)
+        return {"op": "age_lt" if m.group(1) == "<" else "age_ge", "f": "VO-02", "v": int(m.group(2))}
     m = re.fullmatch(rf"({ID}) (=|≠|≥|≤) (.+)", t)
     if m:
         op = {"=": "eq", "≠": "ne", "≥": "ge", "≤": "le"}[m.group(2)]
         return {"op": op, "f": m.group(1), "v": m.group(3).strip()}
+    m = re.fullmatch(rf"({ID}) leer", t)
+    if m:
+        return {"op": "isempty", "f": m.group(1)}
     m = re.fullmatch(rf"({ID}) (angezeigt|befüllt|ausgefüllt)", t)
     if m:
         return {"op": "shown" if m.group(2) == "angezeigt" else "filled", "f": m.group(1)}
@@ -50,7 +59,7 @@ def parse_condition(text):
     ors = re.split(r"\s+(?:ODER|oder)\s+(?=[A-Z]{2}-\d)", text.strip())
     out = []
     for part in ors:
-        ands = re.split(r"\s+(?:UND|und)\s+(?=[A-Z]{2}-\d|Eintrag)", part)
+        ands = re.split(r"\s+(?:UND|und)\s+(?=[A-Z]{2}-\d|Eintrag|Alter)", part)
         out.append([parse_atom(a) for a in ands])
     return out  # Liste von UND-Gruppen, verknüpft mit ODER
 
@@ -72,16 +81,20 @@ def main():
     fields = []
     for r in rows(wb["Datenfelder"]):
         cond_text = r.get("Bedingung (anzeigen/Pflicht wenn)")
+        src = r.get("Quelle") or ""
+        if src.startswith("berechnet"):
+            src = "berechnet"  # Details der Berechnung stehen im Hinweis bzw. in der Legende
         lst = r.get("Werteliste")
         if lst and lst not in lists:
             sys.exit(f"Werteliste fehlt: {lst} ({r['ID']})")
         fields.append({
             "id": r["ID"], "key": r["Schlüssel"], "sec": r["Abschnitt"], "grp": r["Gruppe"],
             "label": r["Feldname"], "type": r["Datentyp"], "fmt": r.get("Format / Validierung") or "",
-            "list": lst, "req": r["Pflicht"], "src": r.get("Quelle") or "",
+            "list": lst, "req": r["Pflicht"], "src": src,
             "condText": cond_text or "", "cond": parse_condition(cond_text),
             "ex": "" if r.get("Beispielwert") is None else str(r["Beispielwert"]),
             "hint": r.get("Hinweis") or "", "scope": r.get("Gilt für") or "alle",
+            "mod": r.get("Modul") or "",
             "excl": (re.search(r"\b([A-Z_]+) schließt andere Codes aus", r.get("Hinweis") or "") or [None, None])[1],
         })
 
@@ -110,6 +123,29 @@ def main():
                                             "sp_txt": r[3], "ge_txt": r[4], "more": r[5] if r[5] not in (None, "–") else ""}
 
     ids = [f["id"] for f in fields]
+    # Prüfung: Codes in Bedingungen müssen in der Werteliste des Felds vorkommen
+    by = {f["id"]: f for f in fields}
+    fehler = []
+    for f in fields:
+        for grp in f["cond"] or []:
+            for a in grp:
+                ref = by.get(a["f"])
+                if not ref or a["op"] not in ("eq", "ne", "has", "in"):
+                    continue
+                codes = {c["c"].lower() for c in lists.get(ref["list"], [])} if ref["list"] else ({"ja", "nein"} if ref["type"] == "boolean" else None)
+                if codes is None:
+                    continue
+                for v in (a["v"] if isinstance(a["v"], list) else [a["v"]]):
+                    if str(v).lower() not in codes:
+                        fehler.append(f"{f['id']}: Code {v!r} gibt es in {ref['list'] or 'ja/nein'} ({a['f']}) nicht")
+    for f in fields:  # Beispielwerte gegen Wertelisten
+        if f["list"] and f["ex"] and f["type"].startswith("enum"):
+            codes = {c["c"] for c in lists[f["list"]]}
+            for v in [x.strip() for x in f["ex"].split(";")]:
+                if v not in codes:
+                    fehler.append(f"{f['id']}: Beispielwert {v!r} nicht in {f['list']}")
+    if fehler:
+        sys.exit("Fehler im Datenfeld-Verzeichnis:\n  " + "\n  ".join(fehler))
     for f in fields:
         for grp in f["cond"] or []:
             for a in grp:
